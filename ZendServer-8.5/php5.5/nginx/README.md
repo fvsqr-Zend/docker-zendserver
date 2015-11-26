@@ -1,7 +1,7 @@
 Zend Server 8.5  in Docker
 ============================================
 
-Build your own bootstrapped Docker container for Zend Server with Apache and PHP 5.5.
+Build your own bootstrapped Docker container for Zend Server with Nginx and PHP 5.5.
 
 To build run:
 ```
