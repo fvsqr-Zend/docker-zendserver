@@ -1,12 +1,12 @@
 #!/bin/sh
 
-ZS_VERSION=8.6
+ZS_VERSION=9.0
 
 usage()
 {
 cat <<EOF
 
-Usage: $0 <php_version> [--automatic] [--repository <url>]
+Usage: $0 <php_version> [nginx] [--automatic] [--repository <url>]
 Where php_version is 7.0.
 
 EOF
@@ -18,8 +18,7 @@ if [ -z $LOG_FILE ]; then
 	LOG_FILE=/tmp/install_zs.log
 fi
 
-#SUPPORTED_OS='CentOS|Red Hat Enterprise Linux Server|SUSE|Debian GNU/Linux|Ubuntu|Oracle Linux Server'
-SUPPORTED_OS='Debian GNU/Linux|Ubuntu'
+SUPPORTED_OS='CentOS|Red Hat Enterprise Linux Server|Debian GNU/Linux|Ubuntu|Oracle Linux Server'
 echo "Supported OS regex: $SUPPORTED_OS" >> $LOG_FILE
 
 
@@ -39,24 +38,23 @@ else
 fi
 	
 # on OEL 5, /etc/issue states "Enterprise Linux Enterprise Linux Server"
-#UNSUPPORTED_OS='CentOS release 5|Red Hat Enterprise Linux Server release 5|Enterprise Linux Enterprise Linux Server 5|Debian GNU/Linux 6|Ubuntu 10'
-UNSUPPORTED_OS='CentOS release|Red Hat Enterprise Linux Server release|Enterprise Linux Enterprise Linux Server|Debian GNU/Linux 6|Ubuntu 10'
+UNSUPPORTED_OS='CentOS release 5|Red Hat Enterprise Linux Server release 5|Enterprise Linux Enterprise Linux Server 5|Debian GNU/Linux 6|Ubuntu 10|SUSE'
 echo "Support for the following OS has been stopped: $UNSUPPORTED_OS" >> $LOG_FILE
 
 if ! echo $CURRENT_OS | egrep -q "$SUPPORTED_OS"; then
 		echo "Your Linux distribution isn't supported by Zend Server $ZS_VERSION. For a list of supported Linux distributions, "
-		echo "see system requirements at http://files.zend.com/help/Zend-Server/zend-server.htm#system_requirements.htm"
+		echo "see system requirements at http://files.zend.com/help/Zend-Server/content/installing_php_7_preview.htm"
 		exit 1
 elif echo $CURRENT_OS | egrep -q "$UNSUPPORTED_OS" ; then
 		echo "Your Linux distribution isn't supported anymore by Zend Server $ZS_VERSION. For a list of supported Linux distributions, "
-		echo "see system requirements at http://files.zend.com/help/Zend-Server/zend-server.htm#system_requirements.htm"
+		echo "see system requirements at http://files.zend.com/help/Zend-Server/content/installing_php_7_preview.htm"
 		exit 1
 fi
 
 # -v or --version
-echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 101459 $)" >> $LOG_FILE
+echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 102499 $)" >> $LOG_FILE
 if [ "$1" = "-v" -o "$1" = "--version" ]; then
-	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 101459 $)"
+	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 102499 $)"
 	usage
 	exit 0
 fi
@@ -74,13 +72,24 @@ if [ $# -lt 1 ]; then
 fi
 
 # Verify parameter
-if [ "$1" != "5.5" -a "$1" != "5.6" -a "$1" != "7.0" ]; then
+if [ "$1" != "7.0" ]; then
 	usage
 	exit 2
 else
 	PHP=$1
-	WHAT_TO_INSTALL="zend-server-php-$PHP"
+	if [ "$2" = "nginx" ]; then
+		shift
+		NGINX="nginx"
+		WHAT_TO_INSTALL="zend-server-nginx-php-$PHP"
+	else
+		WHAT_TO_INSTALL="zend-server-php-$PHP"
+	fi
 	WHAT_TO_INSTALL="$WHAT_TO_INSTALL zend-server-php-$PHP-common"
+
+	if [ "$2" = "debug" ]; then
+		shift
+		WHAT_TO_INSTALL="$WHAT_TO_INSTALL zend-server-php-$PHP-dbg"
+	fi
 
 	if [ "$2" = "java" ]; then
 		shift
@@ -218,7 +227,7 @@ if [ "$UPGRADE" = "1" ]; then
 	fi
 else
 	if [ -n "$INSTALLED_PHP_PACKAGES" ] && [ -z "$NGINX" ]; then
-		echo "Found PHP package $INSTALLED_PHP_PACKAGES from your distribution, please remove it before installing Zend Server"
+		echo "Found PHP package $INSTALLED_PHP_PACKAGES from your distribution, please remove it, and php5, before installing Zend Server"
 		exit 2
 	fi
 fi
@@ -246,7 +255,7 @@ if [ "$2" = "--repository" ]; then
 		echo
 	fi
 else
-	REPOSITORY="http://repos-source.zend.com/zend-server/early-access/zs-php7-tech-preview/"
+	REPOSITORY="http://repos.zend.com/zend-server/early-access/zs-php7-tech-preview/"
 fi
 
 # Set repository 
@@ -270,7 +279,7 @@ if which apt-get 2> /dev/null; then
 	wget http://repos.zend.com/zend.key -O- 2> /dev/null | apt-key add -
 elif which zypper 2> /dev/null; then
 	REPO_FILE=`dirname $0`/zend.rpm.suse.repo
-	read -r -d '' REPOSITORY_CONTENT <<-'EOF'
+	read -r -d '' REPOSITORY_CONTENT <<-EOF
 		[Zend]
 		name=Zend Server
 		baseurl=$REPOSITORY/sles/\$basearch
@@ -307,7 +316,7 @@ elif which yum 2> /dev/null; then
 	if echo $CURRENT_OS | grep -q -E "CentOS release 6|Red Hat Enterprise Linux Server release 6|Oracle Linux Server release 6"; then
 		# RHEL / Centos 6
 		REPO_FILE=`dirname $0`/zend.rpm.repo
-		read -r -d '' REPOSITORY_CONTENT <<-'EOF'
+		read -r -d '' REPOSITORY_CONTENT <<-EOF
 			[Zend]
 			name=Zend Server
 			baseurl=$REPOSITORY/rpm/\$basearch
@@ -325,7 +334,7 @@ elif which yum 2> /dev/null; then
 	elif echo $CURRENT_OS | grep -q -E "CentOS Linux release 7|Red Hat Enterprise Linux Server release 7|Oracle Linux Server release 7"; then
 		# RHEL / Centos 7
 		REPO_FILE=`dirname $0`/zend.rpm_apache2.4.repo
-		read -r -d '' REPOSITORY_CONTENT <<-'EOF'
+		read -r -d '' REPOSITORY_CONTENT <<-EOF
 			[Zend]
 			name=Zend Server
 			baseurl=$REPOSITORY/rpm_apache2.4/\$basearch
