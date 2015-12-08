@@ -5,16 +5,22 @@
 FROM ubuntu:trusty
 MAINTAINER Jan Burkl <jan@zend.com>
 
-ADD run.sh /run.sh
 ADD my.cnf /etc/mysql/conf.d/my.cnf
 ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
-RUN chmod 775 /*.sh
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor wget && wget http://repos.zend.com/zend.key -O- |apt-key add -
 RUN /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.0 --automatic
-RUN /usr/local/zend/bin/zendctl.sh stop
 
+RUN echo "Setting Docker API key and bootstrapping Zend Server" && \
+/usr/local/zend/bin/zendctl.sh start && \
+/usr/local/zend/bin/zs-manage api-keys-add-key -n docker -s 0123456789012345678901234567890123456789012345678901234567890123 && \
+/usr/local/zend/bin/zs-manage bootstrap-single-server -p admin -a 'TRUE' -r FALSE -t 3 -w 5 && \
+/usr/local/zend/bin/zs-manage restart -N docker -K 0123456789012345678901234567890123456789012345678901234567890123 && \
+/usr/local/zend/bin/zendctl.sh stop
+
+ADD run.sh /run.sh
+RUN chmod 775 /*.sh
 ADD zend.conf /etc/supervisor/conf.d/zend.conf
 
 EXPOSE 80
