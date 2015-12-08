@@ -11,6 +11,11 @@ APP_IP=`/sbin/ifconfig eth0| grep 'inet addr:' | awk {'print $2'}| cut -d ':' -f
 
 service zend-server start
 
+if [[ -n $ZS_ADMIN_PASSWORD ]]; then
+  echo "Changing GUI Password" 
+  /usr/local/zend/bin/php /usr/local/zend/bin/gui_passwd.php $ZS_ADMIN_PASSWORD 
+fi 
+
 if [[ -n $MYSQL_HOSTNAME && -n $MYSQL_PORT && -n $MYSQL_USERNAME && -n $MYSQL_PASSWORD && -n $MYSQL_DBNAME ]]; then
   echo "Joining cluster"
   $ZS_MANAGE server-add-to-cluster -T 120 -n $APP_UNIQUE_NAME -i $APP_IP -o $MYSQL_HOSTNAME:$MYSQL_PORT -u $MYSQL_USERNAME -p $MYSQL_PASSWORD -d $MYSQL_DBNAME -N $WEB_API_KEY -K $WEB_API_KEY_HASH -s| sed -e 's/ //g' > /root/zend_cluster.sh
