@@ -54,6 +54,7 @@ or
 ```
 https://localhost:PORT_MAP_10082
 ```
+The default password for accessing the GUI with the admin user is 'admin'. If the password should be changed during the start of the conatiner, the environment var ZS_ADMIN_PASSWORD can be added with the -e flag.
 There is also some output from Zend Server after bootstrapping - for example the password for the UI. If you're not running in damonized mode, you'll get the output directly in the terminal. Otherwise you have to execute:
 ```
 docker logs <container-id>

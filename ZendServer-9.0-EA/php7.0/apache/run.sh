@@ -1,9 +1,5 @@
 #!/bin/bash
 
-if [ -z $ZS_ADMIN_PASSWORD ]; then
-    ZS_ADMIN_PASSWORD=`date +%s | sha256sum | base64 | head -c 8`
-    echo $ZS_ADMIN_PASSWORD > /root/zend-password
-fi
 ZS_MANAGE=/usr/local/zend/bin/zs-manage
 HOSTNAME=`hostname`
 APP_UNIQUE_NAME=$HOSTNAME
@@ -34,15 +30,6 @@ echo "********************************************
 Zend Server is ready for use
 Your application is available at http://$APP_IP
 To access Zend Server, navigate to http://$APP_IP:10081"
-
-if [ "$amount_servers" -gt "1" ]; then
-    echo "This is a clustered environment. Please use 
-the admin password of the first node to 
-login to the Zend Server GUI."
-
-else
-  echo "Your admin password is $ZS_ADMIN_PASSWORD" 
-fi
 
 echo "
 ********************************************"
