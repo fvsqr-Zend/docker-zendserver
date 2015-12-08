@@ -60,14 +60,6 @@ docker logs <container-id>
 ```
 Please note that it can take some time to bootstrap and configure Zend Server - so please be patient and repeat the command if you don't get the Zend Server URL and password immediately.
 
-MySQL
------
-If you'd like to have the docker container with a preinstalled MySQL database, you can run the container with some additional environment variables:
-```
-docker run -e INSTALL_MYSQL=true -e MYSQL_PASSWORD=<password> -e MYSQL_USERNAME=<username> janatzend/zend-server:9.0EA-php7.0-apache
-```
-The DB is being installed on the fly - this is probably not the "Docker way" to go (because you should run a MySQL container and link it to the App Server container), but it can be very convenient...
-
 Cluster
 -------
 To start a Zend Server cluster, execute the following command for each cluster node:
