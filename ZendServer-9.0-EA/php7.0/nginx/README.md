@@ -1,6 +1,14 @@
 Zend Server 9.0 Technology Preview in Docker
 ============================================
+Run
+---
+The image is automatically built at docker hub:
+```
+docker pull janatzend/zend-server:9.0EA-php7.0-nginx
+```
 
+Build
+-----
 Build your own bootstrapped Docker container for Zend Server with Nginx and PHP 7.0.
 
 To build run:
@@ -54,31 +62,19 @@ or
 ```
 https://localhost:PORT_MAP_10082
 ```
+The default password for accessing the GUI with the admin user is 'admin'. If the password should be changed during the start of the conatiner, the environment var ZS_ADMIN_PASSWORD can be added with the -e flag.
 There is also some output from Zend Server after bootstrapping - for example the password for the UI. If you're not running in damonized mode, you'll get the output directly in the terminal. Otherwise you have to execute:
 ```
 docker logs <container-id>
 ```
 Please note that it can take some time to bootstrap and configure Zend Server - so please be patient and repeat the command if you don't get the Zend Server URL and password immediately.
 
-MySQL
------
-If you'd like to have the docker container with a preinstalled MySQL database, you can run the container with some additional environment variables:
-```
-docker run -e INSTALL_MYSQL=true -e MYSQL_PASSWORD=<password> -e MYSQL_USERNAME=<username> janatzend/zend-server:9.0EA-php7.0-nginx
-```
-The DB is being installed on the fly - this is probably not the "Docker way" to go (because you should run a MySQL container and link it to the App Server container), but it can be very convenient...
-
 Cluster
 -------
-To start a Zend Server cluster, execute the following command for each cluster node:
+To start a Zend Server cluster, use `docker-compose`. You can find a docker-compose.yml file in the repository. It will start a Load Balancer container , a MySQL container and Zend Server.
+The Zend Server container can be scaled by calling for example
 ```
-docker run -e MYSQL_HOSTNAME=<db-ip> -e MYSQL_PORT=3306 -e MYSQL_USERNAME=<username> -e MYSQL_PASSWORD=<password> -e MYSQL_DBNAME=zendserver zend-server:9.0EA-php7.0-nginx
+docker-compose scale zendserver=3
 ```
-Please note that you have to specify all of the environment variables from the command above to join the new Zend Server to the cluster.
-As you can see, a MySQL DB is mandatory for Zend Server cluster. An easy way to get one in Docker is to follow the instructions from https://github.com/tutumcloud/tutum-docker-mysql
-
-By calling the command above with the flag "-d" multiple times in a row, you'll set up a cluster within seconds. As written above, the bootstrapping process can tike some time, so that the complete cluster is up and running within a few minutes.
-
-Please note that you can access the GUI from all nodes, but the password is only created for node #1. So please consider checking the docker log for the first container to get the appropriate Zend Server URL and password. Probably the first node is also the node which is ready the first. So you can log in and see the other nodes joining.
-
+The load balancer will automatically reconfigure, so that the website with all started applicaton servers is reachable at `http://localhost:8080`. The Zend Server GUI URL is echoed to the logs of the Zend Server container.
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...

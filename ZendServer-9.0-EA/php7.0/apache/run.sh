@@ -12,18 +12,16 @@ if [[ -n $ZS_ADMIN_PASSWORD ]]; then
   /usr/local/zend/bin/php /usr/local/zend/bin/gui_passwd.php $ZS_ADMIN_PASSWORD 
 fi 
 
-if [[ -n $MYSQL_HOSTNAME && -n $MYSQL_PORT && -n $MYSQL_USERNAME && -n $MYSQL_PASSWORD && -n $MYSQL_DBNAME ]]; then
-  echo "Joining cluster"
-  $ZS_MANAGE server-add-to-cluster -T 120 -n $APP_UNIQUE_NAME -i $APP_IP -o $MYSQL_HOSTNAME:$MYSQL_PORT -u $MYSQL_USERNAME -p $MYSQL_PASSWORD -d $MYSQL_DBNAME -N $WEB_API_KEY -K $WEB_API_KEY_HASH -s| sed -e 's/ //g' > /root/zend_cluster.sh
-  echo "MYSQL_HOSTNAME=$MYSQL_HOSTNAME
-  MYSQL_PORT=$MYSQL_PORT
-  MYSQL_USERNAME=$MYSQL_USERNAME
-  MYSQL_PASSWORD=$MYSQL_PASSWORD
-  MYSQL_DBNAME=$MYSQL_DBNAME" >> /root/zend_cluster.sh
+WEB_API_SECRET=$(cat /root/web_api_secret)
 
-  eval `cat /root/zend_cluster.sh`
-  $ZS_MANAGE store-directive -d 'session.save_handler' -v 'cluster' -N $WEB_API_KEY -K $WEB_API_KEY_HASH
+if [[ -n $CLUSTER ]]; then
+  echo "Joining cluster"
+  $ZS_MANAGE server-add-to-cluster -T 120 -n $APP_UNIQUE_NAME -i $APP_IP -o DB:3306 -u admin -p admin -d ZendServer -N docker -K $WEB_API_SECRET -s
+  $ZS_MANAGE store-directive -d 'session.save_handler' -v 'cluster' -N docker -K $WEB_API_SECRET
 fi
+
+$ZS_MANAGE store-directive -d 'zray.zendserver_ui_url' -v "http://$APP_IP:10081/ZendServer" -N docker -K $WEB_API_SECRET
+$ZS_MANAGE restart -N docker -K $WEB_API_SECRET
 
 echo "********************************************
 

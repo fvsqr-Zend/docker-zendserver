@@ -1,6 +1,14 @@
 Zend Server 8.5  in Docker
 ============================================
+Run
+---
+The image is automatically built at docker hub:
+```
+docker pull janatzend/zend-server:8.5-php5.5-apache
+```
 
+Build
+-----
 Build your own bootstrapped Docker container for Zend Server with Apache and PHP 5.5.
 
 To build run:
