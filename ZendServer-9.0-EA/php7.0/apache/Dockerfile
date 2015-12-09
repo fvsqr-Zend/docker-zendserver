@@ -5,7 +5,6 @@
 FROM ubuntu:trusty
 MAINTAINER Jan Burkl <jan@zend.com>
 
-ADD my.cnf /etc/mysql/conf.d/my.cnf
 ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
