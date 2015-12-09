@@ -8,7 +8,7 @@ lb:
   restart: always
 
 zendserver:
-  image: sandbox/zs/8.5
+  image: janatzend/zend-server:8.5-php5.5-apache
   links:
     - 'mysql:DB'
   environment:
