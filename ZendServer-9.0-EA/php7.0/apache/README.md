@@ -4,7 +4,7 @@ Run
 ---
 The image is automatically built at docker hub:
 ```
-docker pull janatzend/zend-server:9.0EA-php5.5-apache
+docker pull janatzend/zend-server:9.0EA-php7.0-apache
 ```
 
 Build
