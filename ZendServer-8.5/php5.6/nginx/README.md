@@ -77,4 +77,8 @@ The Zend Server container can be scaled by calling for example
 docker-compose scale zendserver=3
 ```
 The load balancer will automatically reconfigure, so that the website with all started applicaton servers is reachable at `http://localhost:8080`. The Zend Server GUI URL is echoed to the logs of the Zend Server container.
+In the case of scaling down, it's recommended to increase the timeout for the 'stop' signal (default 10 seconds) like this:
+```
+docker-compose scale --timeout 30 zendserver=1
+```
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...
