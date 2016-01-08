@@ -13,13 +13,13 @@ Build your own bootstrapped Docker container for Zend Server with Apache and PHP
 
 To build run:
 ```
-docker build -t janatzend/zend-server:8.5-php5.5 .
+docker build -t janatzend/zend-server:8.5-php5.5-apache .
 ```
 from within the cloned directory (please note the trailing dot).
 
 To run:
 ```
-docker run -d -P janatzend/zend-server:8.5-php5.5
+docker run -d -P janatzend/zend-server:8.5-php5.5-apache
 ```
 This starts the container in a daemonized mode, that means that the container is still available after closing the terminal window.
 
@@ -27,7 +27,7 @@ Docker esposes port 80 and 443 for http(s) and port 10081 and 10082 for Zend Ser
 
 You can also map manually, for example
 ```
-docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:8.5-php5.5
+docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:8.5-php5.5-apache
 ```
 This command redirects port 80 to port 88, and port 10081 (Zend Server UI port) to port 10088.
 
@@ -35,11 +35,11 @@ Internal / Development mode
 ---------------------------
 If there's no need to expose ports at all, beacuse all you need is an internal dev system which is only available on your personal host, you can also start a container like this:
 ```
-docker run -d janatzend/zend-server:8.5-php5.5
+docker run -d janatzend/zend-server:8.5-php5.5-apache
 ```
 or
 ```
-docker run janatzend/zend-server:8.5-php5.5
+docker run janatzend/zend-server:8.5-php5.5-apache
 ```
 You can access the App and Zend Server UI via the default ports 80, 443, 10081, 10082, but now you have to use the IP address of the container. You can find it in the result of
 ```
