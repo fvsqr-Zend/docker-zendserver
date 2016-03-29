@@ -6,7 +6,7 @@ usage()
 {
 cat <<EOF
 
-Usage: $0 <php_version> [nginx] [--automatic] [--repository <url>]
+Usage: $0 <php_version> [nginx] [java] [--automatic] [--repository <url>]
 Where php_version is 7.0.
 
 EOF
@@ -22,7 +22,7 @@ SUPPORTED_OS='CentOS|Red Hat Enterprise Linux Server|Debian GNU/Linux|Ubuntu|Ora
 echo "Supported OS regex: $SUPPORTED_OS" >> $LOG_FILE
 
 
-if `which lsb_release > /dev/null 2>&1`; then
+if `type lsb_release > /dev/null 2>&1`; then
 	CURRENT_OS=`lsb_release -d -s`
 	echo "Current OS detected as: $CURRENT_OS" >> $LOG_FILE
 elif [ -f /etc/system-release ]; then
@@ -38,7 +38,7 @@ else
 fi
 	
 # on OEL 5, /etc/issue states "Enterprise Linux Enterprise Linux Server"
-UNSUPPORTED_OS='CentOS release 5|Red Hat Enterprise Linux Server release 5|Enterprise Linux Enterprise Linux Server 5|Debian GNU/Linux 6|Ubuntu 10|SUSE'
+UNSUPPORTED_OS='CentOS release 5|CentOS release 6|Red Hat Enterprise Linux Server release 5|Red Hat Enterprise Linux Server release 6|Enterprise Linux Enterprise Linux Server 5|Enterprise Linux Enterprise Linux Server 6|Debian GNU/Linux 6|Debian GNU/Linux 7|Ubuntu 10|Ubuntu 11|Ubuntu 12|Ubuntu 13|SUSE'
 echo "Support for the following OS has been stopped: $UNSUPPORTED_OS" >> $LOG_FILE
 
 if ! echo $CURRENT_OS | egrep -q "$SUPPORTED_OS"; then
@@ -52,9 +52,9 @@ elif echo $CURRENT_OS | egrep -q "$UNSUPPORTED_OS" ; then
 fi
 
 # -v or --version
-echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 102499 $)" >> $LOG_FILE
+echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 105360 $)" >> $LOG_FILE
 if [ "$1" = "-v" -o "$1" = "--version" ]; then
-	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 102499 $)"
+	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 105360 $)"
 	usage
 	exit 0
 fi
@@ -102,7 +102,7 @@ fi
 SELINUX_ENABLED_OS='CentOS|Red Hat Enterprise Linux Server|Enterprise Linux Enterprise Linux Server|Oracle Linux Server'
 
 if echo $CURRENT_OS | egrep -q "$SELINUX_ENABLED_OS"; then
-	if which getenforce > /dev/null 2> /dev/null && [ `getenforce` = "Enforcing" ]; then
+	if type getenforce > /dev/null 2> /dev/null && [ `getenforce` = "Enforcing" ]; then
 		SELINUX_ENABLED=1;
 		echo "SELinux status: `getenforce`." >> $LOG_FILE
 	fi
@@ -135,7 +135,7 @@ EOF
 
 if [ "$2" = "--automatic" ]; then
 	shift
-	if which zypper > /dev/null 2>&1; then
+	if type zypper > /dev/null 2>&1; then
 		AUTOMATIC="-n --gpg-auto-import-keys"
 	else
 		AUTOMATIC="-y"
@@ -155,18 +155,18 @@ fi
 # Upgrade check
 UPGRADE=0
 echo -n "Tool for checking existing installation: "
-if which dpkg 2> /dev/null; then
+if type dpkg 2> /dev/null; then
 	INSTALLED_PACKAGES=`dpkg -l '*zend*' | grep ^ii | awk '{print $2}'`
-	if `dpkg -l "zend-server*" | grep ^ii | grep -q -E "php-5|cluster-manager"`; then
+	if `dpkg -l "zend-server*" | grep ^ii | grep -q -E "php-5|php-7"`; then
 		UPGRADE=1;
 		echo "Will try to upgrade, installed packages detected: $INSTALLED_PACKAGES" >> $LOG_FILE
 	else
 		INSTALLED_PHP_PACKAGES=`dpkg -l libapache2-mod-php5 | grep ^ii | awk '{print $2}'`;
 		echo "Existing PHP packages detected: $INSTALLED_PHP_PACKAGES" >> $LOG_FILE
 	fi
-elif which rpm 2> /dev/null; then
+elif type rpm 2> /dev/null; then
 	INSTALLED_PACKAGES=`rpm -qa --qf="%{NAME}\n" '*zend*'`
-	if `rpm -qa | grep "^zend-server" | grep -q -E "php-5|cluster-manager"`; then
+	if `rpm -qa | grep "^zend-server" | grep -q -E "php-5|php-7"`; then
 		UPGRADE=1;
 		echo "Will try to upgrade, installed packages detected: $INSTALLED_PACKAGES" >> $LOG_FILE
 	fi
@@ -178,6 +178,7 @@ fi
 
 # Check if upgrade is allowed
 if [ "$UPGRADE" = "1" ]; then
+	
 	if [ -f /etc/zce.rc ]; then
 		. /etc/zce.rc
 	fi
@@ -185,8 +186,12 @@ if [ "$UPGRADE" = "1" ]; then
 	INSTALLED_PHP=`/usr/local/zend/bin/php -v | head -1 | cut -f2 -d" "`
 	INSTALLED_PHP_MAJOR=`echo $INSTALLED_PHP | cut -f1,2 -d"."`
 
-	echo "Found existing installation of Zend Server ($PRODUCT_VERSION) with PHP $INSTALLED_PHP"
 	echo "Found existing installation of Zend Server ($PRODUCT_VERSION) with PHP $INSTALLED_PHP" >> $LOG_FILE
+	echo "Upgrades to Zend Server 9.0 early access are not supported"
+	echo "For instructions on how to uninstall the previous version, see the Online Help at"
+        echo "http://files.zend.com/help/Zend-Server/content/installation_guide.htm"
+
+	exit 2
 	echo
 
 	if [ "$INSTALLED_PHP" = "5.3.15" -o "$INSTALLED_PHP" = "5.4.5" ]; then
@@ -224,6 +229,16 @@ if [ "$UPGRADE" = "1" ]; then
 		echo "The recommend method to upgrade from PHP $INSTALLED_PHP_MAJOR to PHP $PHP is a clean installation. If a clean installation is"
 		echo "not an option, you should first upgrade to Zend Server 6.3 with PHP 5.3, and only then upgrade to PHP $PHP."
 		exit 2
+	elif [ "$INSTALLED_PHP_MAJOR" = "5.5" -a "$PHP" = "7.0" ]; then
+		echo "Upgrading to Zend Server with PHP $PHP from older versions is not supported."
+		echo "For instructions on how to uninstall the previous version, see the Online Help at"
+		echo "http://files.zend.com/help/Zend-Server/content/installation_guide.htm"
+		exit 2
+	elif [ "$INSTALLED_PHP_MAJOR" = "5.6" -a "$PHP" = "7.0" ]; then
+		echo "Upgrading to Zend Server with PHP $PHP from older versions is not supported."
+		echo "For instructions on how to uninstall the previous version, see the Online Help at"
+		echo "http://files.zend.com/help/Zend-Server/content/installation_guide.htm"
+		exit 2
 	fi
 else
 	if [ -n "$INSTALLED_PHP_PACKAGES" ] && [ -z "$NGINX" ]; then
@@ -255,12 +270,12 @@ if [ "$2" = "--repository" ]; then
 		echo
 	fi
 else
-	REPOSITORY="http://repos.zend.com/zend-server/early-access/zs-php7-tech-preview/"
+	REPOSITORY="http://repos.zend.com/zend-server/early-access/zs-php7-tech-preview3/Linux/"
 fi
 
 # Set repository 
 echo -n "Doing repository configuration for: "
-if which apt-get 2> /dev/null; then
+if type apt-get 2> /dev/null; then
 	if echo $CURRENT_OS | grep -q -E "Debian GNU/Linux 5|Debian GNU/Linux 6|Ubuntu 10"; then
 		REPO_FILE=`dirname $0`/zend.deb.repo
 		REPOSITORY_CONTENT="deb $REPOSITORY/deb server non-free"
@@ -270,14 +285,19 @@ if which apt-get 2> /dev/null; then
 		REPOSITORY_CONTENT="deb $REPOSITORY/deb_ssl1.0 server non-free"
 	else
 		# This is the default for Debian >> 7 and Ubuntu >> 13.04
-		REPO_FILE=`dirname $0`/zend.deb_apache2.4.repo
-		REPOSITORY_CONTENT="deb $REPOSITORY/deb_apache2.4 server non-free"
+		if [ `uname -m` = "ppc64le" ]; then
+			REPO_FILE=`dirname $0`/zend.deb_power8.repo
+			REPOSITORY_CONTENT="deb $REPOSITORY/deb_power8 server non-free"
+		else
+			REPO_FILE=`dirname $0`/zend.deb_apache2.4.repo
+			REPOSITORY_CONTENT="deb $REPOSITORY/deb_apache2.4 server non-free"
+		fi
 	fi
 
 	TARGET_REPO_FILE=/etc/apt/sources.list.d/zend.list
 	SYNC_COMM="apt-get update"
 	wget http://repos.zend.com/zend.key -O- 2> /dev/null | apt-key add -
-elif which zypper 2> /dev/null; then
+elif type zypper 2> /dev/null; then
 	REPO_FILE=`dirname $0`/zend.rpm.suse.repo
 	read -r -d '' REPOSITORY_CONTENT <<-EOF
 		[Zend]
@@ -312,7 +332,7 @@ elif which zypper 2> /dev/null; then
 		ARCH=i586;
 	fi
 	SYNC_COMM="sed -i \"s/\\\$basearch/$ARCH/g\" ${TARGET_REPO_FILE}; $SYNC_COMM"
-elif which yum 2> /dev/null; then
+elif type yum 2> /dev/null; then
 	if echo $CURRENT_OS | grep -q -E "CentOS release 6|Red Hat Enterprise Linux Server release 6|Oracle Linux Server release 6"; then
 		# RHEL / Centos 6
 		REPO_FILE=`dirname $0`/zend.rpm.repo
@@ -382,35 +402,49 @@ if [ -n "$SYNC_COMM" ]; then
 	eval $SYNC_COMM
 fi
 
-RC=0
+# Define a fuction to verify deb packages, as we need to verify 
+# each in a loop instead all at once (JIRA issue ZSRV-15762)
+verify_deb() {
+        VERIFY_RC=0
+        for package in $*; do
+                dpkg-query -W -f='${Status}\n' $package | grep -q ' installed'
+                RC=$?
+                if [ $RC -gt 0 ]; then
+                        echo "Package $package is not installed."
+                        VERIFY_RC=$RC;
+                fi
+        done
+        return $VERIFY_RC
+}
 
+RC=0
 
 # Clean Installation
 if [ "$UPGRADE" = "0" ]; then
 	echo "Clean installation" >> $LOG_FILE
 	echo -n "Package manager for installation: "
-	if which aptitude 2> /dev/null; then
+	if type aptitude 2> /dev/null; then
 		echo "Executing: aptitude $AUTOMATIC install $WHAT_TO_INSTALL" >> $LOG_FILE
 		aptitude $AUTOMATIC install $WHAT_TO_INSTALL
 		RC=$?
 		echo "Exit code: $RC" >> $LOG_FILE
-		dpkg-query -W -f='${Status}\n' $WHAT_TO_INSTALL | grep -q ' installed'
+		verify_deb $WHAT_TO_INSTALL 2> /dev/null
 		VERIFY_RC=$?
-	elif which apt-get 2> /dev/null; then
+	elif type apt-get 2> /dev/null; then
 		echo "Executing: apt-get $AUTOMATIC install $WHAT_TO_INSTALL" >> $LOG_FILE
 		apt-get $AUTOMATIC install $WHAT_TO_INSTALL
 		RC=$?
 		echo "Exit code: $RC" >> $LOG_FILE
-		dpkg-query -W -f='${Status}\n' $WHAT_TO_INSTALL | grep -q ' installed'
+		verify_deb $WHAT_TO_INSTALL 2> /dev/null
 		VERIFY_RC=$?
-	elif which yum 2> /dev/null; then
+	elif type yum 2> /dev/null; then
 		echo "Executing: yum $AUTOMATIC install $WHAT_TO_INSTALL" >> $LOG_FILE
 		yum $AUTOMATIC install $WHAT_TO_INSTALL
 		RC=$?
 		echo "Exit code: $RC" >> $LOG_FILE
 		rpm -q --qf "%{name} %{version}\n" $WHAT_TO_INSTALL 2> /dev/null
 		VERIFY_RC=$?
-	elif which zypper 2> /dev/null; then
+	elif type zypper 2> /dev/null; then
 		echo "Executing: zypper $AUTOMATIC install $WHAT_TO_INSTALL" >> $LOG_FILE
 		zypper $AUTOMATIC install $WHAT_TO_INSTALL
 		RC=$?
@@ -452,7 +486,7 @@ if [ "$UPGRADE" = "1" ]; then
 
 	# Workaround an upgrade bug in our 6.1.0 Debian packages (ZSRV-11344)
 	if [ "$BACKUP_SUFFIX" = "6.1.0" -o "$BACKUP_SUFFIX" = "6.2.0" ]; then
-		if which dpkg 2> /dev/null; then
+		if type dpkg 2> /dev/null; then
 			mkdir -p $ZCE_PREFIX/etc-$BACKUP_SUFFIX-workaround
 			cp -rp $ZCE_PREFIX/etc/* $ZCE_PREFIX/etc-$BACKUP_SUFFIX-workaround
 		fi
@@ -462,29 +496,29 @@ if [ "$UPGRADE" = "1" ]; then
 	if [ "$INSTALLED_PHP_MAJOR" = "$PHP" ]; then
 		echo "Same PHP upgrade" >> $LOG_FILE
 		# Same PHP upgrade
-		if which aptitude 2> /dev/null; then
+		if type aptitude 2> /dev/null; then
 			echo "Executing: aptitude $AUTOMATIC install '~izend'" >> $LOG_FILE
 			aptitude $AUTOMATIC install '~izend'
 			RC=$?
 			echo "Exit code: $RC" >> $LOG_FILE
-			dpkg-query -W -f='${Status}\n' $WHAT_TO_INSTALL | grep -q ' installed'
+			verify_deb $WHAT_TO_INSTALL
 			VERIFY_RC=$?
-		elif which apt-get 2> /dev/null; then
+		elif type apt-get 2> /dev/null; then
 			echo "Executing: apt-get $AUTOMATIC install $WHAT_TO_INSTALL" >> $LOG_FILE
 			apt-get $AUTOMATIC install $WHAT_TO_INSTALL
 			RC=$?
 			echo "Exit code: $RC" >> $LOG_FILE
-			dpkg-query -W -f='${Status}\n' $WHAT_TO_INSTALL | grep -q ' installed'
+			verify_deb $WHAT_TO_INSTALL
 			VERIFY_RC=$?
 			apt-get $AUTOMATIC install `dpkg -l '*zend*' | grep ^ii | awk '{print $2}'`
-		elif which yum 2> /dev/null; then
+		elif type yum 2> /dev/null; then
 			echo "Executing: yum $AUTOMATIC upgrade '*zend*'" >> $LOG_FILE
 			yum $AUTOMATIC upgrade '*zend*'
 			RC=$?
 			echo "Exit code: $RC" >> $LOG_FILE
 			rpm -q --qf "%{name} %{version}\n" $WHAT_TO_INSTALL 2> /dev/null
 			VERIFY_RC=$?
-		elif which zypper 2> /dev/null; then
+		elif type zypper 2> /dev/null; then
 			echo "Executing: zypper $AUTOMATIC update -r Zend -r Zend_noarch" >> $LOG_FILE
 			zypper $AUTOMATIC update -r Zend -r Zend_noarch
 			RC=$?
@@ -502,7 +536,7 @@ if [ "$UPGRADE" = "1" ]; then
 		# PHP upgrade
 		echo "PHP upgrade" >> $LOG_FILE
 
-		EXTRA_PACKAGES="zend-server-framework-dojo zend-server-framework-extras source-zend-server pdo-informix-zend-server pdo-ibm-zend-server ibmdb2-zend-server java-bridge-zend-server \-javamw-zend-server"
+		EXTRA_PACKAGES="zend-server-framework-dojo zend-server-framework-extras source-zend-server pdo-informix-zend-server pdo-ibm-zend-server ibmdb2-zend-server java-bridge-zend-server \-javamw-zend-server lighttpd-zend-server"
 		WHAT_TO_INSTALL_EXTRA=""
 
 		# Find which extra packages we have and should be installed
@@ -513,7 +547,7 @@ if [ "$UPGRADE" = "1" ]; then
 			fi
 		done
 
-		if which apt-get 2> /dev/null; then
+		if type apt-get 2> /dev/null; then
 			if ! echo $CURRENT_OS | grep -q -E "Debian GNU/Linux 5|Debian GNU/Linux 6|Ubuntu 10|Ubuntu 12.04"; then
 				# Remove the zend-server package when apt-get version newer than 0.8
 				apt-get $AUTOMATIC remove `echo $WHAT_TO_INSTALL | sed "s/$PHP/$INSTALLED_PHP_MAJOR/g"`
@@ -525,9 +559,9 @@ if [ "$UPGRADE" = "1" ]; then
 			if [ $RC -eq 0 ]; then
 				apt-get $AUTOMATIC install `dpkg -l '*zend*' | grep ^ii | awk '{print $2}'`
 			fi
-			dpkg-query -W -f='${Package} ${Version}\n' $WHAT_TO_INSTALL 2> /dev/null
+			verify_deb $WHAT_TO_INSTALL 2> /dev/null
 			VERIFY_RC=$?
-		elif which yum 2> /dev/null; then
+		elif type yum 2> /dev/null; then
 			yum $AUTOMATIC remove "zend-server*-php-5.*" && yum $AUTOMATIC remove "deployment-daemon-zend-server" && yum $AUTOMATIC remove "*zend*"
 			echo "Executing: yum $AUTOMATIC install $WHAT_TO_INSTALL $WHAT_TO_INSTALL_EXTRA" >> $LOG_FILE
 			yum $AUTOMATIC install $WHAT_TO_INSTALL $WHAT_TO_INSTALL_EXTRA
@@ -535,7 +569,7 @@ if [ "$UPGRADE" = "1" ]; then
 			echo "Exit code: $RC" >> $LOG_FILE
 			rpm -q --qf "%{name} %{version}\n" $WHAT_TO_INSTALL 2> /dev/null
 			VERIFY_RC=$?
-		elif which zypper 2> /dev/null; then
+		elif type zypper 2> /dev/null; then
 			echo "Using zypper for upgrade" >> $LOG_FILE
 			zypper $AUTOMATIC remove "zend-server*-php-5.*" && zypper $AUTOMATIC remove "deployment-daemon-zend-server" && zypper $AUTOMATIC remove "*zend*"
 			echo "Executing: zypper $AUTOMATIC install $WHAT_TO_INSTALL $WHAT_TO_INSTALL_EXTRA" >> $LOG_FILE
