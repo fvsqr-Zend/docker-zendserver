@@ -76,5 +76,5 @@ The Zend Server container can be scaled by calling for example
 ```
 docker-compose scale zendserver=3
 ```
-The load balancer will automatically reconfigure, so that the website with all started applicaton servers is reachable at `http://localhost:8080`. The Zend Server GUI URL is echoed to the logs of the Zend Server container.
+The load balancer will automatically reconfigure, so that the website with all started applicaton servers is reachable at `http://localhost:8888`. The Zend Server GUI URL is echoed to the logs of the Zend Server container.
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...
