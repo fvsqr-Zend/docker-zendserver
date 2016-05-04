@@ -1,5 +1,16 @@
 #!/bin/bash
 
+shutdown_zs()
+{
+    echo "Removing server from cluster..."
+    WEB_API_SECRET=$(cat /root/web_api_secret)
+    SERVER_ID=`$ZS_MANAGE cluster-list-servers -N docker -K $WEB_API_SECRET | grep $HOSTNAME | cut -f1`
+    $ZS_MANAGE cluster-remove-server $SERVER_ID -N docker -K $WEB_API_SECRET -s
+    exit 0
+}
+
+trap "shutdown_zs; exit" SIGINT SIGTERM SIGHUP
+
 ZS_MANAGE=/usr/local/zend/bin/zs-manage
 HOSTNAME=`hostname`
 APP_UNIQUE_NAME=$HOSTNAME
@@ -32,4 +43,5 @@ To access Zend Server, navigate to http://$APP_IP:10081"
 echo "
 ********************************************"
 
-exec supervisord -n > /dev/null 2>/dev/null
+tail -f /var/log/dpkg.log > /dev/null &
+wait
