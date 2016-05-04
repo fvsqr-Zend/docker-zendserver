@@ -1,4 +1,4 @@
-Zend Server 9.0 Technology Preview in Docker
+Zend Server 9.0 in Docker
 ============================================
 Run
 ---
