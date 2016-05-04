@@ -1,5 +1,5 @@
 #
-# Zend Server 9.0EA
+# Zend Server 9.0
 #
 
 FROM ubuntu:trusty
@@ -9,7 +9,7 @@ ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y supervisor wget && wget http://repos.zend.com/zend.key -O- |apt-key add -
-RUN /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.0 --automatic
+RUN /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.0 nginx --automatic
 
 RUN date +%s | sha256sum | base64 | head -c 64 | sed 's/.*/\L&/' > /root/web_api_secret
 RUN echo "Setting Docker API key and bootstrapping Zend Server" && \

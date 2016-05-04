@@ -4,7 +4,7 @@ echo "This script will define the nginx.org repository on your system"
 echo "See support matrix at http://nginx.org/en/linux_packages.html#distributions"
 echo
 
-if `which lsb_release > /dev/null 2>&1`; then
+if `type lsb_release > /dev/null 2>&1`; then
 	CURRENT_OS=`lsb_release -d -s`
 elif [ -f /etc/system-release ]; then
 	CURRENT_OS=`head -1 /etc/system-release`
@@ -83,6 +83,14 @@ elif echo $CURRENT_OS | grep -q "Ubuntu 14.04"; then
 elif echo $CURRENT_OS | grep -q "Ubuntu 14.10"; then
 	OS=ubuntu
 	OSRELEASE=utopic
+	TYPE=deb
+elif echo $CURRENT_OS | grep -q "Ubuntu 15.04"; then
+	OS=ubuntu
+	OSRELEASE=vivid
+	TYPE=deb
+elif echo $CURRENT_OS | grep -q "Ubuntu 15.10"; then
+	OS=ubuntu
+	OSRELEASE=wily
 	TYPE=deb
 else
 	echo "Based on either lsb_release or /etc/issue your OS version is not supported by nginx.org"

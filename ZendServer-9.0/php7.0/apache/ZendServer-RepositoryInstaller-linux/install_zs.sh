@@ -52,9 +52,9 @@ elif echo $CURRENT_OS | egrep -q "$UNSUPPORTED_OS" ; then
 fi
 
 # -v or --version
-echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 105360 $)" >> $LOG_FILE
+echo "Using `basename $0` version $ZS_VERSION (build: \$Revision: 105551 $)" >> $LOG_FILE
 if [ "$1" = "-v" -o "$1" = "--version" ]; then
-	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 105360 $)"
+	echo "`basename $0` version $ZS_VERSION (build: \$Revision: 105551 $)"
 	usage
 	exit 0
 fi
@@ -187,7 +187,7 @@ if [ "$UPGRADE" = "1" ]; then
 	INSTALLED_PHP_MAJOR=`echo $INSTALLED_PHP | cut -f1,2 -d"."`
 
 	echo "Found existing installation of Zend Server ($PRODUCT_VERSION) with PHP $INSTALLED_PHP" >> $LOG_FILE
-	echo "Upgrades to Zend Server 9.0 early access are not supported"
+	echo "Upgrade to Zend Server 9.0 is not supported"
 	echo "For instructions on how to uninstall the previous version, see the Online Help at"
         echo "http://files.zend.com/help/Zend-Server/content/installation_guide.htm"
 
@@ -246,15 +246,15 @@ else
 		exit 2
 	fi
 fi
-
+if type rpm 2> /dev/null; then
 # Set nginx.org repository 
-if [ "$NGINX" = "nginx" ]; then
-	`dirname $0`/nginx/install_nginx.sh
-	if [ $? != 0 ]; then
-		exit 2
+	if [ "$NGINX" = "nginx" ]; then
+		`dirname $0`/nginx/install_nginx.sh
+		if [ $? != 0 ]; then
+			exit 2
+		fi
 	fi
 fi
-
 if [ "$2" = "--repository" ]; then
 	if [ -z "$3" ]; then
 		echo
@@ -270,7 +270,7 @@ if [ "$2" = "--repository" ]; then
 		echo
 	fi
 else
-	REPOSITORY="http://repos.zend.com/zend-server/early-access/zs-php7-tech-preview3/Linux/"
+	REPOSITORY=""
 fi
 
 # Set repository 
