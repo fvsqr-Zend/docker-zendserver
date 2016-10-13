@@ -1,0 +1,8 @@
+zsclient:
+  image: sb/zs:9.0
+  entrypoint: /zsclient.sh
+  volumes_from:
+    - zendserver:ro
+  links:
+    - 'zendserver:zendserver'
+        
