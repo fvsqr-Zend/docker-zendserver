@@ -7,6 +7,8 @@ trap "remove_from_cluster; exit" SIGINT SIGTERM SIGHUP
 print_header
 
 echo ServerName $HOSTNAME >> /etc/apache2/apache2.conf
+source /etc/apache2/envvars              
+rm -f $APACHE_PID_FILE
 
 service zend-server start
 
