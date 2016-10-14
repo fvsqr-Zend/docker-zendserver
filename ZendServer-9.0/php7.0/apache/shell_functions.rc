@@ -19,10 +19,16 @@ print_header()
 
 remove_from_cluster()
 {
-  echo "Removing node from cluster..."
+  echo "Check node: cluster member?"
   SERVER_ID=`$ZS_MANAGE cluster-list-servers -N docker -K $WEB_API_SECRET | grep $HOSTNAME | cut -f1`
-  $ZS_MANAGE cluster-remove-server $SERVER_ID -N docker -K $WEB_API_SECRET -s
-  echo "Node removed"
+  if [ "$SERVER_ID" == "" ] 
+  then
+    echo "Standalone server, exiting now." 
+  else
+    echo "Removing node from cluster..."
+    $ZS_MANAGE cluster-remove-server $SERVER_ID -N docker -K $WEB_API_SECRET -s
+    echo "Node removed"
+  fi
   exit 0
 }
 
