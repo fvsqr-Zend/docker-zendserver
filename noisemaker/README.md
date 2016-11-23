@@ -58,3 +58,9 @@ If you have generated the data more than two hours before a demo, you do not hav
 make eventdata-update
 ```
 It will reset the first event item from now minus two hours.
+### Step 3c
+For your convenience several targets have been created to use the Zend Server WebAPI in order to fetch monitoring, statistics and URL insight data. Call
+```
+make help
+```
+and search for targets starting with ```zs-get``` to see all the available commands. 
