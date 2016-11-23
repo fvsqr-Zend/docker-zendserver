@@ -15,6 +15,8 @@ MYSQL_PWD ?= admin
 
 ###
 
+DEPLOY_SCRIPT ?= deploy-$(APP).sh
+
 SHELL           ?= /bin/bash
 
 PROJECT_NORMALIZED ?= $(shell echo $(PROJECT) | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
@@ -37,7 +39,7 @@ default: help
 # App specific targets
 ###
 deploy: ##@App deploy application to cluster
-	$(DOCKER_COMPOSE_SETUP) run --rm $(ZSCLIENT_CONTAINER) deploy-magento.sh
+	$(DOCKER_COMPOSE_SETUP) run --rm $(ZSCLIENT_CONTAINER) $(DEPLOY_SCRIPT)
 
 scale: ##@App scale cluster to specified amount of nodes; usage example: make scale ZS=3
 	$(DOCKER_COMPOSE) scale $(ZS_CONTAINER)=$(ZS)

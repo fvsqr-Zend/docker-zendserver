@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+
+  zsclient:
+    build:
+      context: https://github.com/janatzend/dockerfiles.git
+      dockerfile: php-base/php5.6-zsclient
+    entrypoint: /bin/bash
+    volumes_from:
+      - zendserver:ro
+    volumes:
+      - zpk-wordpress:/zpk
+      - ./zs_env:/etc/zs_env
+      - ./wordpress/deploy.sh:/usr/local/bin/deploy-wordpress.sh
+      - ./wordpress/credentials:/etc/wp_credentials
+      - ./webapi/zray.sh:/usr/local/bin/set-directive-zray.sh
+      - ./webapi/restart.sh:/usr/local/bin/restart-zs.sh
+      - ./webapi/systeminfo.sh:/usr/local/bin/systeminfo.sh
+    links:
+      - 'zendserver:zendserver'
+    command: ["deploy-wordpress.sh"]
+
+  wordpress-zpk:
+    build:
+      context: https://github.com/janatzend/dockerfiles.git
+      dockerfile: zpk/wordpress
+    volumes:
+      - zpk-wordpress:/zpk
+    command: ["mv", "/*.zpk", "/zpk"]
+
+volumes:
+    zpk-wordpress:
