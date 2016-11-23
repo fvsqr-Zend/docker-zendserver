@@ -1,0 +1,9 @@
+export ZENDSERVER_HOST=zendserver
+
+export DB_HOST=DB
+export DB_USER=root
+export DB_PASS=admin
+export DB_NAME=ZendServer
+
+export WEB_API_KEY=docker
+export WEB_API_SECRET=$(cat /webapi/secret)

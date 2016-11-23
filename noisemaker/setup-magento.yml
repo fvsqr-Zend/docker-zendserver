@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+
+  zsclient:
+    build:
+      context: https://github.com/janatzend/dockerfiles.git
+      dockerfile: php-base/php5.6-zsclient
+    entrypoint: /bin/bash
+    volumes_from:
+      - zendserver:ro
+    volumes:
+      - zpk-magento:/zpk
+      - ./zs_env:/etc/zs_env
+      - ./magento/deploy.sh:/usr/local/bin/deploy-magento.sh
+      - ./magento/credentials:/etc/magento_credentials
+      - ./webapi/zray.sh:/usr/local/bin/set-directive-zray.sh
+      - ./webapi/restart.sh:/usr/local/bin/restart-zs.sh
+      - ./webapi/systeminfo.sh:/usr/local/bin/systeminfo.sh
+    links:
+      - 'zendserver:zendserver'
+    command: ["deploy-magento.sh"]
+
+  magento-zpk:
+    build:
+      context: https://github.com/janatzend/dockerfiles.git
+      dockerfile: zpk/magento
+    volumes:
+      - zpk-magento:/zpk
+    command: ["mv", "/*.zpk", "/zpk"]
+
+volumes:
+    zpk-magento:

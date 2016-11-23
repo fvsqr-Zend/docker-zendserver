@@ -1,8 +1,0 @@
-zsclient:
-  image: janatzend/zend-server:9.0-php7.0-apache
-  entrypoint: /zsclient.sh
-  volumes_from:
-    - zendserver:ro
-  links:
-    - 'zendserver:zendserver'
-        

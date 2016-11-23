@@ -1,0 +1,4 @@
+mysqldump -uadmin -pYBmUAJJUPc1G -h 172.17.0.2 ZendServerBak events stats_daily stats_monthly stats_weekly urlinsight_requests_daily urlinsight_requests_monthly urlinsight_requests_weekly > ../eventdata-timestamp.sql
+mysqldump -uadmin -pYBmUAJJUPc1G -h 172.17.0.2 ZendServerBak cluster_issues event_attributes issues requests request_components request_uid_to_event_id urlinsight_resources_dictionary matched_rules > ../eventdata.sql
+
+mysql -uadmin -pYBmUAJJUPc1G -h 172.17.0.2 ZendServerBak -e "TRUNCATE TABLE events"

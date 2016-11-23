@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+
+  zs-eventdata:
+    image: 'mysql:5.6'
+    entrypoint: /bin/bash
+    volumes:
+      - ./zs_env:/etc/zs_env
+      - ./noise/magento/sql:/sql
+      - ./noise/magento/data_init.sh:/usr/local/bin/data_init.sh
+      - ./noise/magento/data_update.sh:/usr/local/bin/data_update.sh
+    links:
+      - 'mysql:DB'
+    command: ["data-init.sh"]
+
+  zsclient:
+    build:
+      context: https://github.com/janatzend/dockerfiles.git
+      dockerfile: php-base/php5.6-zsclient
+    entrypoint: /bin/bash
+    volumes_from:
+      - zendserver:ro
+    volumes:
+      - ./zs_env:/etc/zs_env
+      - ./webapi/monitor_issues_performance.sh:/usr/local/bin/monitor_issues_performance.sh
+      - ./webapi/monitor_issues_resources.sh:/usr/local/bin/monitor_issues_resources.sh
+      - ./webapi/statistics_cpu_avg.sh:/usr/local/bin/statistics_cpu_avg.sh
+      - ./webapi/statistics_request_processing_time.sh:/usr/local/bin/statistics_request_processing_time.sh
+      - ./webapi/urlinsight.sh:/usr/local/bin/urlinsight.sh
+    links:
+      - 'zendserver:zendserver'
+    command: ["-i"]
