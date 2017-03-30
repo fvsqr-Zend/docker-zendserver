@@ -16,13 +16,11 @@ services:
   zendserver:
     build:
       context: .
-      dockerfile: Dockerfile.apache
-      #dockerfile: Dockerfile.nginx
+      dockerfile: Dockerfile.nginx
     links:
       - 'mysql:DB'
     environment:
       - CLUSTER=true
-      - APACHE_ULIMIT_MAX_FILES="ulimit -n 4096"
       - TCP_PORTS=80, 10081
       - BALANCE=source
       - EXCLUDE_PORTS=443,10082

@@ -15,7 +15,7 @@ else
 	echo "configure nginx.org repository."
 	exit 1
 fi
-	
+
 if echo $CURRENT_OS | grep -q "CentOS release 5"; then
 	OS=centos
 	OSRELEASE=5
@@ -121,9 +121,9 @@ else
 	exit 2
 fi
 
-# Set repository 
+# Set repository
 cp -f $SOURCE_REPO_FILE $TARGET_REPO_FILE && sed "s/OSRELEASE/$OSRELEASE/g" -i $TARGET_REPO_FILE &&  sed "s/OS/$OS/g" -i $TARGET_REPO_FILE
 if [ $? = 0 ]; then
 	echo
-	echo "*** nginx.org repository configured successfully at $TARGET_REPO_FILE ***" 
+	echo "*** nginx.org repository configured successfully at $TARGET_REPO_FILE ***"
 fi

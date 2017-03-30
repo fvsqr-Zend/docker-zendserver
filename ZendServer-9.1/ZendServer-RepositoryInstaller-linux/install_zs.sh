@@ -36,7 +36,7 @@ else
 	echo "configure Zend's DEB/RPM repositories."
 	exit 1
 fi
-	
+
 # on OEL 5, /etc/issue states "Enterprise Linux Enterprise Linux Server"
 UNSUPPORTED_OS='CentOS release 5|CentOS release 6|Red Hat Enterprise Linux Server release 5|Red Hat Enterprise Linux Server release 6|Enterprise Linux Enterprise Linux Server 5|Enterprise Linux Enterprise Linux Server 6|Debian GNU/Linux 6|Debian GNU/Linux 7|Ubuntu 10|Ubuntu 11|Ubuntu 12|Ubuntu 13|SUSE'
 echo "Support for the following OS has been stopped: $UNSUPPORTED_OS" >> $LOG_FILE
@@ -95,7 +95,7 @@ else
 		shift
 		WHAT_TO_INSTALL="$WHAT_TO_INSTALL php-$PHP-java-bridge-zend-server"
 	fi
-	
+
 	echo "Top packages for installation: $WHAT_TO_INSTALL" >> $LOG_FILE
 fi
 
@@ -128,14 +128,14 @@ fi
 cat <<EOF
 
 Running this script will perform the following:
-* Configure your package manager to use Zend Server repository 
+* Configure your package manager to use Zend Server repository
 * Install Zend Server (PHP $PHP) on your system using your package manager
 
 EOF
 
 if [ "$2" = "--automatic" ]; then
 	shift
-	AUTOMATIC="-y"
+	AUTOMATIC="-y --allow-unauthenticated"
 else
 	AUTOMATIC=""
 fi
@@ -178,7 +178,7 @@ if [ -f /etc/apt/sources.list.d/nginx.list ]; then
 fi
 # Check if upgrade is allowed
 if [ "$UPGRADE" = "1" ]; then
-	
+
 	if [ -f /etc/zce.rc ]; then
 		. /etc/zce.rc
 	fi
@@ -214,7 +214,7 @@ if [ "$UPGRADE" = "1" ]; then
 	fi
 fi
 if type rpm 2> /dev/null; then
-# Set nginx.org repository 
+# Set nginx.org repository
 	if [ "$NGINX" = "nginx" ]; then
 		`dirname $0`/nginx/install_nginx.sh
 		if [ $? != 0 ]; then
@@ -240,7 +240,7 @@ else
 	REPOSITORY=""
 fi
 
-# Set repository 
+# Set repository
 echo -n "Doing repository configuration for: "
 if type apt-get 2> /dev/null; then
 	if echo $CURRENT_OS | grep -q -E "Debian GNU/Linux 5|Debian GNU/Linux 6|Ubuntu 10"; then
@@ -323,7 +323,7 @@ fi
 if [ $REPOSITORY_RC != 0 ]; then
 	echo
 	echo "***************************************************************************************"
-	echo "* Zend Server Installation was not completed. Can't setup package manager repository. *" 
+	echo "* Zend Server Installation was not completed. Can't setup package manager repository. *"
 	echo "***************************************************************************************"
 	exit 2
 else
@@ -334,7 +334,7 @@ if [ -n "$SYNC_COMM" ]; then
 	eval $SYNC_COMM
 fi
 
-# Define a fuction to verify deb packages, as we need to verify 
+# Define a fuction to verify deb packages, as we need to verify
 # each in a loop instead all at once (JIRA issue ZSRV-15762)
 verify_deb() {
         VERIFY_RC=0
@@ -404,7 +404,7 @@ if [ "$UPGRADE" = "1" ]; then
 
 	# Backup etc
 	BACKUP_SUFFIX=$PRODUCT_VERSION
-	
+
 	if [ ! -d $ZCE_PREFIX/etc-$BACKUP_SUFFIX ]; then
 		mkdir $ZCE_PREFIX/etc-$BACKUP_SUFFIX
 	fi
@@ -462,7 +462,7 @@ if [ "$UPGRADE" = "1" ]; then
 		WHAT_TO_INSTALL_EXTRA=""
 
 		# Find which extra packages we have and should be installed
-		for package in $EXTRA_PACKAGES; do 
+		for package in $EXTRA_PACKAGES; do
 			EXTRA_PACKAGE=`echo "$INSTALLED_PACKAGES" | grep $package | sed "s/$INSTALLED_PHP_MAJOR/$PHP/g"`
 			if [ -n "$EXTRA_PACKAGE" ]; then
 				WHAT_TO_INSTALL_EXTRA="$WHAT_TO_INSTALL_EXTRA $EXTRA_PACKAGE"
@@ -513,14 +513,14 @@ if [ $RC -eq 0 -a $VERIFY_RC -eq 0 ]; then
 	echo "* Zend Server was successfully installed. 		*"
 	echo "* 							*"
 	echo "* To access the Zend Server UI open your browser at:	*"
-	echo "* https://<hostname>:10082/ZendServer (secure) 		*" 
-	echo "* or 							*" 
-	echo "* http://<hostname>:10081/ZendServer			*" 
+	echo "* https://<hostname>:10082/ZendServer (secure) 		*"
+	echo "* or 							*"
+	echo "* http://<hostname>:10081/ZendServer			*"
 	echo "***********************************************************"
 else
 	echo
 	echo "************************************************************************************************"
-	echo "* Zend Server Installation was not completed. See output above for detailed error information. *" 
+	echo "* Zend Server Installation was not completed. See output above for detailed error information. *"
 	echo "************************************************************************************************"
 fi
 echo

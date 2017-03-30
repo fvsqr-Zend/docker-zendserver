@@ -20,7 +20,7 @@ docker build -t janatzend/zend-server:9.1EA-php7.1-apache .
 ```
 or
 ```
-docker build -t janatzend/zend-server:9.1EA-php7.1-nginx .
+docker build -t janatzend/zend-server:9.1EA-php7.1-nginx -f Dockerfile.nginx .
 ```
 from within the cloned directory (please note the trailing dot).
 
@@ -94,3 +94,7 @@ docker-compose scale zendserver=3
 ```
 The load balancer will automatically reconfigure, so that the website with all started application servers is reachable at `http://localhost:80`.
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...
+
+make
+----
+For your convenience a Makefile has been created. Make is used for simple pulling, building, starting, stopping and removing Docker images resp. containers. In a terminal type ```make```to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.

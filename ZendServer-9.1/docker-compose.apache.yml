@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+
+  lb:
+    image: dockercloud/haproxy:1.6.3
+    links:
+      - zendserver
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 10081:10081
+      - 1936:1936
+
+  zendserver:
+    image: janatzend/zend-server:9.1EA-php7.1-apache
+    links:
+      - 'mysql:DB'
+    environment:
+      - CLUSTER=true
+      - APACHE_ULIMIT_MAX_FILES="ulimit -n 4096"
+      - TCP_PORTS=80, 10081
+      - BALANCE=source
+      - EXCLUDE_PORTS=443,10082
+    volumes:
+      - /webapi
+
+  mysql:
+    image: 'mysql:5.6'
+    ports:
+      - '3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_DATABASE: 'ZendServer'

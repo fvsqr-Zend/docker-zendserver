@@ -9,7 +9,7 @@ ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y wget && wget http://repos.zend.com/zend.key -O- |apt-key add - \
-  && /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.1 --automatic nginx \
+  && /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.1 nginx --automatic \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /webapi && date +%s | sha256sum | base64 | head -c 64 | sed 's/.*/\L&/' > /webapi/secret
