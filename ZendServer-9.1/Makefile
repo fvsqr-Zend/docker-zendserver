@@ -24,6 +24,7 @@ zs-apache-localbuild-def:
 	$(eval DOCKER_COMPOSE_FILE = docker-compose.apache.local-build.yml)
 
 zs-apache-localbuild-build: zs-apache-localbuild-def prep build ##@Apache-local-build build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-localbuild-force-build: zs-apache-localbuild-def prep force-build ##@Apache-local-build force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-localbuild-start: zs-apache-localbuild-def prep start info ##@Apache-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-localbuild-stop: zs-apache-localbuild-def prep stop ##@Apache-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-localbuild-clean: zs-apache-localbuild-def prep clean ##@Apache-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
@@ -48,6 +49,7 @@ zs-nginx-localbuild-def:
 	$(eval DOCKER_COMPOSE_FILE = docker-compose.nginx.local-build.yml)
 
 zs-nginx-localbuild-build: zs-nginx-localbuild-def prep build ##@Nginx-local-build build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-localbuild-force-build: zs-nginx-localbuild-def prep force-build ##@Nginx-local-build force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-localbuild-start: zs-nginx-localbuild-def prep start info ##@Nginx-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-localbuild-stop: zs-nginx-localbuild-def prep stop ##@Nginx-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-localbuild-clean: zs-nginx-localbuild-def prep clean ##@Nginx-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
@@ -69,7 +71,13 @@ info:
 build:
 	@echo "\nBuilding ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
-	${DOCKER_COMPOSE} build
+	${DOCKER_COMPOSE} build --force-rm
+	@echo "\nDone.\n"
+
+force-build:
+	@echo "\nBuilding ${PROJECT_NAME}"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} build --force-rm --no-cache
 	@echo "\nDone.\n"
 
 pull:
