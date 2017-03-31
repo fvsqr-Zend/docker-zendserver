@@ -3,32 +3,21 @@ version: "2"
 services:
 
   lb:
-    image: dockercloud/haproxy:1.6.3
+    extends:
+      file: common-services.yml
+      service: lb
     links:
       - zendserver
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 80:80
-      - 10081:10081
-      - 1936:1936
 
   zendserver:
+    extends:
+      file: common-services.yml
+      service: zendserver
     image: janatzend/zend-server:9.1EA-php7.1-nginx
     links:
       - 'mysql:DB'
-    environment:
-      - CLUSTER=true
-      - TCP_PORTS=80, 10081
-      - BALANCE=source
-      - EXCLUDE_PORTS=443,10082
-    volumes:
-      - /webapi
 
   mysql:
-    image: 'mysql:5.6'
-    ports:
-      - '3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: 'admin'
-      MYSQL_DATABASE: 'ZendServer'
+    extends:
+      file: common-services.yml
+      service: mysql

@@ -4,8 +4,6 @@ services:
 
   lb:
     image: dockercloud/haproxy:1.6.3
-    links:
-      - zendserver
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
@@ -14,10 +12,11 @@ services:
       - 1936:1936
 
   zendserver:
-    links:
-      - 'mysql:DB'
     environment:
       - CLUSTER=true
+      - TCP_PORTS=80, 10081
+      - BALANCE=source
+      - EXCLUDE_PORTS=443,10082
     volumes:
       - /webapi
 
