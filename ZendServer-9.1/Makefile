@@ -15,6 +15,7 @@ zs-apache-pull: zs-apache-def prep pull ##@Apache pull all necessary images (HAP
 zs-apache-start: zs-apache-def prep start info ##@Apache start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-stop: zs-apache-def prep stop ##@Apache stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-clean: zs-apache-def prep clean ##@Apache kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-single-start: zs-apache-def prep single-start ##@Apache start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Apache, local build of containers
@@ -28,6 +29,7 @@ zs-apache-localbuild-force-build: zs-apache-localbuild-def prep force-build ##@A
 zs-apache-localbuild-start: zs-apache-localbuild-def prep start info ##@Apache-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-localbuild-stop: zs-apache-localbuild-def prep stop ##@Apache-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-localbuild-clean: zs-apache-localbuild-def prep clean ##@Apache-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-localbuild-single-start: zs-apache-localbuild-def prep single-start ##@Apache-local-build start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx
@@ -40,6 +42,7 @@ zs-nginx-pull: zs-nginx-def prep pull ##@Nginx build all necessary images (HAPro
 zs-nginx-start: zs-nginx-def prep start info ##@Nginx start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-stop: zs-nginx-def prep stop ##@Nginx stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-clean: zs-nginx-def prep clean ##@Nginx kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-single-start: zs-nginx-def prep single-start ##@Nginx start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx, local build of containers
@@ -53,6 +56,7 @@ zs-nginx-localbuild-force-build: zs-nginx-localbuild-def prep force-build ##@Ngi
 zs-nginx-localbuild-start: zs-nginx-localbuild-def prep start info ##@Nginx-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-localbuild-stop: zs-nginx-localbuild-def prep stop ##@Nginx-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-localbuild-clean: zs-nginx-localbuild-def prep clean ##@Nginx-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-localbuild-single-start: zs-nginx-localbuild-def prep single-start ##@Nginx-local-build start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # General recipes
@@ -90,6 +94,12 @@ start:
 	@echo "\nStarting ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
 	${DOCKER_COMPOSE} up -d
+	@echo "\nDone.\n"
+
+single-start:
+	@echo "\nStarting ${PROJECT_NAME} (Single server)"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} run -d -e CLUSTER= zendserver
 	@echo "\nDone.\n"
 
 stop:
