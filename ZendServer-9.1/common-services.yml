@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+
+  lb:
+    image: dockercloud/haproxy:1.6.3
+    links:
+      - zendserver
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 80:80
+      - 10081:10081
+      - 1936:1936
+
+  zendserver:
+    links:
+      - 'mysql:DB'
+    environment:
+      - CLUSTER=true
+    volumes:
+      - /webapi
+
+  mysql:
+    image: 'mysql:5.6'
+    ports:
+      - '3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+      MYSQL_DATABASE: 'ZendServer'
