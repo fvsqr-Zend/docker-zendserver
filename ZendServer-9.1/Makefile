@@ -5,6 +5,30 @@ DOCKER ?= docker
 default: help
 
 #-------------------------------------------------------------------------------
+# Default: Zend Server 9.1, PHP 7.1, Apache
+#-------------------------------------------------------------------------------
+zs-def:
+	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Apache)
+	$(eval DOCKER_COMPOSE_FILE = docker-compose.yml)
+
+zs-pull: zs-def prep pull ##@Default pull all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-start: zs-def prep start info ##@Default start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-stop: zs-def prep stop ##@Default stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-clean: zs-def prep clean ##@Default kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-single-start: zs-def prep single-start ##@Default start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+
+#-------------------------------------------------------------------------------
+# Helper: Zend Server 9.1, PHP 7.1, Apache, local dev built
+#-------------------------------------------------------------------------------
+zs-helper-def:
+	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Apache, Dev)
+	$(eval DOCKER_COMPOSE_FILE = docker-compose.apache.dev.yml)
+
+zs-helper-build: zs-helper-def prep build-zendserver ##@Helper build Zend Server image
+zs-check-license: zs-helper-def prep check-license ##@Helper check Zend Server license; Usage: export ORDER_NR=<ORDER_NR>; export LICENSE=<LICENSE>; make zs-check-license
+
+
+#-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Apache
 #-------------------------------------------------------------------------------
 zs-apache-def:
@@ -20,16 +44,16 @@ zs-apache-single-start: zs-apache-def prep single-start ##@Apache start single s
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Apache, local build of containers
 #-------------------------------------------------------------------------------
-zs-apache-localbuild-def:
-	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Apache, Local Build)
-	$(eval DOCKER_COMPOSE_FILE = docker-compose.apache.local-build.yml)
+zs-apache-dev-def:
+	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Apache, Dev)
+	$(eval DOCKER_COMPOSE_FILE = docker-compose.apache.dev.yml)
 
-zs-apache-localbuild-build: zs-apache-localbuild-def prep build ##@Apache-local-build build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
-zs-apache-localbuild-force-build: zs-apache-localbuild-def prep force-build ##@Apache-local-build force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
-zs-apache-localbuild-start: zs-apache-localbuild-def prep start info ##@Apache-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
-zs-apache-localbuild-stop: zs-apache-localbuild-def prep stop ##@Apache-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
-zs-apache-localbuild-clean: zs-apache-localbuild-def prep clean ##@Apache-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
-zs-apache-localbuild-single-start: zs-apache-localbuild-def prep single-start ##@Apache-local-build start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-build: zs-apache-dev-def prep build ##@Apache-dev build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-force-build: zs-apache-dev-def prep force-build ##@Apache-dev force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-start: zs-apache-dev-def prep start info ##@Apache-dev start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-stop: zs-apache-dev-def prep stop ##@Apache-dev stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-clean: zs-apache-dev-def prep clean ##@Apache-dev kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-single-start: zs-apache-dev-def prep single-start single-info ##@Apache-dev start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx
@@ -47,16 +71,16 @@ zs-nginx-single-start: zs-nginx-def prep single-start ##@Nginx start single serv
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx, local build of containers
 #-------------------------------------------------------------------------------
-zs-nginx-localbuild-def:
-	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Nginx, Local Build)
-	$(eval DOCKER_COMPOSE_FILE = docker-compose.nginx.local-build.yml)
+zs-nginx-dev-def:
+	$(eval PROJECT_NAME = Zend Server 9.1, PHP 7.1, Nginx, Dev)
+	$(eval DOCKER_COMPOSE_FILE = docker-compose.nginx.dev.yml)
 
-zs-nginx-localbuild-build: zs-nginx-localbuild-def prep build ##@Nginx-local-build build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
-zs-nginx-localbuild-force-build: zs-nginx-localbuild-def prep force-build ##@Nginx-local-build force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
-zs-nginx-localbuild-start: zs-nginx-localbuild-def prep start info ##@Nginx-local-build start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
-zs-nginx-localbuild-stop: zs-nginx-localbuild-def prep stop ##@Nginx-local-build stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
-zs-nginx-localbuild-clean: zs-nginx-localbuild-def prep clean ##@Nginx-local-build kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
-zs-nginx-localbuild-single-start: zs-nginx-localbuild-def prep single-start ##@Nginx-local-build start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-nginx-dev-build: zs-nginx-dev-def prep build ##@Nginx-dev build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-force-build: zs-nginx-dev-def prep force-build ##@Nginx-dev force build all necessary images (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-start: zs-nginx-dev-def prep start info ##@Nginx-dev start cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-stop: zs-nginx-dev-def prep stop ##@Nginx-dev stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-clean: zs-nginx-dev-def prep clean ##@Nginx-dev kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-single-start: zs-nginx-dev-def prep single-start ##@Nginx-dev start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # General recipes
@@ -72,10 +96,23 @@ info:
 	@$(DOCKER) inspect --format "$(FORMAT)" `${DOCKER_COMPOSE} ps -q` | awk '{ printf "%-40s %-20s %-40s\n", $$1, $$2, $$3}'
 	@echo "\nTo get the logs for Zend Server container run \ndocker logs -f ${PROJECT_NAME_SANITIZED}_zendserver_1\n"
 
+single-info:
+	@$(eval FORMAT={{ .Name }} {{.Config.Hostname }} {{ .NetworkSettings.Networks.${PROJECT_NAME_SANITIZED}_default.IPAddress }})
+	@printf "%-40s %-20s %-40s\n" "Name" "ContainerID" "IP address"
+	@echo "-----------------------------------------------------------------------------"
+	@$(DOCKER) inspect --format "$(FORMAT)" `${DOCKER_COMPOSE} ps -q` | awk '{ printf "%-40s %-20s %-40s\n", $$1, $$2, $$3}'
+	@echo "\nTo get the logs for Zend Server container run \ndocker logs -f ${PROJECT_NAME_SANITIZED}_zendserver_run_1\n"
+
 build:
 	@echo "\nBuilding ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
 	${DOCKER_COMPOSE} build --force-rm
+	@echo "\nDone.\n"
+
+build-zendserver:
+	@echo "\nBuilding Zend Server from ${PROJECT_NAME}"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} build --force-rm zendserver
 	@echo "\nDone.\n"
 
 force-build:
@@ -99,7 +136,7 @@ start:
 single-start:
 	@echo "\nStarting ${PROJECT_NAME} (Single server)"
 	@echo "-----------------------------------------------------------------------------\n"
-	${DOCKER_COMPOSE} run -d -e CLUSTER= zendserver
+	${DOCKER_COMPOSE} run -d -e CLUSTER= -p 10081:10081 zendserver
 	@echo "\nDone.\n"
 
 stop:
@@ -115,6 +152,9 @@ clean:
 	${DOCKER_COMPOSE} rm -fv
 	-${DOCKER_COMPOSE} down
 	@echo "\nDone.\n"
+
+check-license:
+	${DOCKER_COMPOSE} run --rm -e ORDER_NR=${ORDER_NR} -e LICENSE=${LICENSE} zendserver /usr/local/zend/bin/php /check_lic.php
 
 # Help based on https://gist.github.com/prwhite/8168133 thanks to @nowox and @prwhite
 # And add help text after each target name starting with '\#\#'
