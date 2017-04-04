@@ -32,7 +32,7 @@ remove_from_cluster()
     echo "Standalone server, exiting now."
   else
     echo "Removing node from cluster..."
-    $ZS_MANAGE cluster-remove-server $SERVER_ID -N $WEB_API_KEY -K $WEB_API_SECRET -s
+    $ZS_MANAGE cluster-remove-server $SERVER_ID -N $WEB_API_KEY -K $WEB_API_SECRET -f
     echo "Node removed"
   fi
   exit 0
