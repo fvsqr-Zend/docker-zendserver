@@ -1,0 +1,23 @@
+version: "2"
+
+services:
+
+  lb:
+    extends:
+      file: common-services.yml
+      service: lb
+    links:
+      - zendserver
+
+  zendserver:
+    extends:
+      file: common-services.yml
+      service: zendserver
+    image: janatzend/zend-server:9.0-php7.0-nginx
+    links:
+      - 'mysql:DB'
+
+  mysql:
+    extends:
+      file: common-services.yml
+      service: mysql
