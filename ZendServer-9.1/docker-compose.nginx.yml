@@ -13,7 +13,7 @@ services:
     extends:
       file: common-services.yml
       service: zendserver
-    image: janatzend/zend-server:9.1EA-php7.1-nginx
+    image: janatzend/zend-server:9.1ea-php7.1-nginx
     links:
       - 'mysql:DB'
 
