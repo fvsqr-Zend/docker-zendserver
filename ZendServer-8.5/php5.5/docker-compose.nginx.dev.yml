@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+
+  lb:
+    extends:
+      file: common-services.yml
+      service: lb
+    links:
+      - zendserver
+
+  zendserver:
+    extends:
+      file: common-services.yml
+      service: zendserver
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx.dev
+    links:
+      - 'mysql:DB'
+
+  mysql:
+    extends:
+      file: common-services.yml
+      service: mysql

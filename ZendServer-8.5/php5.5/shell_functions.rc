@@ -1,0 +1,49 @@
+IP=$(ip addr show eth0 | grep "inet " | awk {'print $2'} | cut -d '/' -f 1)
+HOSTNAME=`hostname`
+
+ZS_MANAGE=/usr/local/zend/bin/zs-manage
+WEB_API_KEY=docker
+WEB_API_SECRET=$(cat /webapi/secret)
+
+DB_USER=root
+DB_PASS=admin
+DB_NAME=ZendServer
+DB_HOST=DB
+
+print_header()
+{
+  printf "\n"
+  for value in  "#" "Hostname: $HOSTNAME" "IP: $IP" "#"
+  do
+    if [ "$value" == "#" ]; then FILLER="#"; else FILLER=" "; fi
+
+    printf -v pad '%0.1s' "$FILLER"{1..60}
+    printf "#$FILLER%s%*.*s%s\n" "$value" 0 $((60 - ${#value} - 2)) "$pad" "#"
+  done
+  printf "\n"
+}
+
+remove_from_cluster()
+{
+  echo "Check node: cluster member?"
+  SERVER_ID=`$ZS_MANAGE cluster-list-servers -N $WEB_API_KEY -K $WEB_API_SECRET | grep $HOSTNAME | cut -f1`
+  if [ "$SERVER_ID" == "" ]
+  then
+    echo "Standalone server, exiting now."
+  else
+    echo "Removing node from cluster..."
+    $ZS_MANAGE cluster-remove-server $SERVER_ID -N $WEB_API_KEY -K $WEB_API_SECRET -s
+    echo "Node removed"
+  fi
+  exit 0
+}
+
+add_to_cluster()
+{
+  echo "Node joining cluster"
+  $ZS_MANAGE server-add-to-cluster -T 120 -n $HOSTNAME -i $IP -o $DB_HOST:3306 -u $DB_USER -p $DB_PASS -d $DB_NAME -N $WEB_API_KEY -K $WEB_API_SECRET -s
+  $ZS_MANAGE store-directive -d 'session.save_handler' -v 'cluster' -N $WEB_API_KEY -K $WEB_API_SECRET
+  $ZS_MANAGE restart-php -N $WEB_API_KEY -K $WEB_API_SECRET
+  echo "joined cluster"
+  sleep 5
+}
