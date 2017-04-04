@@ -153,13 +153,13 @@ single-start:
 scale-to-1:
 	@echo "\nScale to 1 app nodes ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
-	${DOCKER_COMPOSE} scale --timeout=30 zendserver=1
+	${DOCKER_COMPOSE} scale zendserver=1
 	@echo "\nDone.\n"
 
 scale-to-3:
 	@echo "\nScale to 3 app nodes ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
-	${DOCKER_COMPOSE} scale zendserver=2
+	${DOCKER_COMPOSE} scale zendserver=3
 	@echo "\nDone.\n"
 
 scale-to-5:
