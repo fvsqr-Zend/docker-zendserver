@@ -40,6 +40,9 @@ zs-apache-start: zs-apache-def prep start info ##@Apache start cluster (HAProxy;
 zs-apache-stop: zs-apache-def prep stop ##@Apache stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-clean: zs-apache-def prep clean ##@Apache kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-single-start: zs-apache-def prep single-start ##@Apache start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-scale-to-1: zs-apache-def prep scale-to-1 ##@Apache scale to 1 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-scale-to-3: zs-apache-def prep scale-to-3 ##@Apache scale to 3 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-scale-to-5: zs-apache-def prep scale-to-5 ##@Apache scale to 5 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Apache, local build of containers
@@ -54,6 +57,9 @@ zs-apache-dev-start: zs-apache-dev-def prep start info ##@Apache-dev start clust
 zs-apache-dev-stop: zs-apache-dev-def prep stop ##@Apache-dev stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-dev-clean: zs-apache-dev-def prep clean ##@Apache-dev kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 zs-apache-dev-single-start: zs-apache-dev-def prep single-start single-info ##@Apache-dev start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-scale-to-1: zs-apache-dev-def prep scale-to-1 ##@Apache-dev scale to 1 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-scale-to-3: zs-apache-dev-def prep scale-to-3 ##@Apache-dev scale to 3 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-apache-dev-scale-to-5: zs-apache-dev-def prep scale-to-5 ##@Apache-dev scale to 5 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx
@@ -67,6 +73,9 @@ zs-nginx-start: zs-nginx-def prep start info ##@Nginx start cluster (HAProxy; Ze
 zs-nginx-stop: zs-nginx-def prep stop ##@Nginx stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-clean: zs-nginx-def prep clean ##@Nginx kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-single-start: zs-nginx-def prep single-start ##@Nginx start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-nginx-scale-to-1: zs-nginx-def prep scale-to-1 ##@Nginx scale to 1 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-scale-to-3: zs-nginx-def prep scale-to-3 ##@Nginx scale to 3 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-scale-to-5: zs-nginx-def prep scale-to-5 ##@Nginx scale to 5 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 
 #-------------------------------------------------------------------------------
 # Zend Server 9.1, PHP 7.1, Nginx, local build of containers
@@ -81,6 +90,9 @@ zs-nginx-dev-start: zs-nginx-dev-def prep start info ##@Nginx-dev start cluster 
 zs-nginx-dev-stop: zs-nginx-dev-def prep stop ##@Nginx-dev stop cluster (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-dev-clean: zs-nginx-dev-def prep clean ##@Nginx-dev kill and remove all containers belonging to (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 zs-nginx-dev-single-start: zs-nginx-dev-def prep single-start ##@Nginx-dev start single server system (HAProxy; Zend Server 9.1, PHP 7.1, Apache; MySQL)
+zs-nginx-dev-scale-to-1: zs-nginx-dev-def prep scale-to-1 ##@Nginx-dev scale to 1 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-scale-to-3: zs-nginx-dev-def prep scale-to-3 ##@Nginx-dev scale to 3 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
+zs-nginx-dev-scale-to-5: zs-nginx-dev-def prep scale-to-5 ##@Nginx-dev scale to 5 Zend Server nodes (HAProxy; Zend Server 9.1, PHP 7.1, Nginx; MySQL)
 
 #-------------------------------------------------------------------------------
 # General recipes
@@ -143,6 +155,24 @@ stop:
 	@echo "\nStopping ${PROJECT_NAME}"
 	@echo "-----------------------------------------------------------------------------\n"
 	${DOCKER_COMPOSE} stop
+	@echo "\nDone.\n"
+
+scale-to-1:
+	@echo "\nScale to 1 app nodes ${PROJECT_NAME}"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} scale --timeout=30 zendserver=1
+	@echo "\nDone.\n"
+
+scale-to-3:
+	@echo "\nScale to 3 app nodes ${PROJECT_NAME}"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} scale zendserver=2
+	@echo "\nDone.\n"
+
+scale-to-5:
+	@echo "\nScale to 5 app nodes ${PROJECT_NAME}"
+	@echo "-----------------------------------------------------------------------------\n"
+	${DOCKER_COMPOSE} scale zendserver=5
 	@echo "\nDone.\n"
 
 clean:
