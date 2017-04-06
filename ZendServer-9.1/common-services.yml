@@ -8,14 +8,24 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 80:80
-      - 10081:10081
       - 1936:1936
+    environment:
+      - BALANCE=roundrobin
+
+  lb-ui:
+    image: dockercloud/haproxy:1.6.3
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 10081:10081
+      - 1937:1936
+    environment:
+      - BALANCE=source
 
   zendserver:
     environment:
       - CLUSTER=true
       - TCP_PORTS=80, 10081
-      - BALANCE=source
       - EXCLUDE_PORTS=443,10082
     volumes:
       - /webapi

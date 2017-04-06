@@ -8,6 +8,15 @@ services:
       service: lb
     links:
       - zendserver
+    environment:
+      - BALANCE=roundrobin
+
+  lb-ui:
+    extends:
+      file: common-services.yml
+      service: lb-ui
+    links:
+      - zendserver
 
   zendserver:
     extends:

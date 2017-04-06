@@ -9,6 +9,13 @@ services:
     links:
       - zendserver
 
+  lb-ui:
+    extends:
+      file: common-services.yml
+      service: lb-ui
+    links:
+      - zendserver
+
   zendserver:
     extends:
       file: common-services.yml
