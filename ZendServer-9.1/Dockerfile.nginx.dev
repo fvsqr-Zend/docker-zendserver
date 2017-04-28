@@ -2,22 +2,25 @@
 # Zend Server 9.1
 #
 
-FROM ubuntu:16.04
+FROM centos:7
 MAINTAINER Jan Burkl <jan@zend.com>
 
-ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
+COPY ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
+
+COPY functions /etc/rc.d/init.d/functions
+COPY nginx_init_centos7 /etc/init.d/nginx
+RUN chmod a+x /etc/init.d/nginx /etc/rc.d/init.d/functions
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN yum install -y \
   wget \
   curl \
   vim \
   telnet \
   net-tools \
   inetutils-ping \
-  && wget http://repos.zend.com/zend.key -O- |apt-key add - \
   && /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.1 nginx --automatic \
-  && rm -rf /var/lib/apt/lists/*
+  yum clean all
 
 RUN mkdir /webapi && date +%s | sha256sum | base64 | head -c 64 | sed 's/.*/\L&/' > /webapi/secret
 RUN echo "Setting Docker API key and bootstrapping Zend Server" && \
@@ -28,7 +31,7 @@ WEB_API_SECRET=$(cat /webapi/secret) && \
 /usr/local/zend/bin/zs-manage restart -N docker -K $WEB_API_SECRET && \
 /usr/local/zend/bin/zendctl.sh stop
 
-COPY run.sh /run.sh
+COPY run-nginx.sh /run.sh
 RUN chmod 775 /*.sh
 
 COPY shell_functions.rc /shell_functions.rc

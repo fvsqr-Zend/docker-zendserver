@@ -1,4 +1,4 @@
-IP=$(ip addr show eth0 | grep "inet " | awk {'print $2'} | cut -d '/' -f 1)
+IP=$(hostname -I | cut -d" " -f 1)
 HOSTNAME=`hostname`
 
 ZS_MANAGE=/usr/local/zend/bin/zs-manage
