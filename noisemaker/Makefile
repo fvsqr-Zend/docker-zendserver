@@ -2,8 +2,8 @@
 
 PROJECT		?= phpcluster
 
-ZS_VERSION ?= 9.0
-PHP_VERSION ?= 7.0
+ZS_VERSION ?= 9.1
+PHP_VERSION ?= 7.1
 WEBSERVER ?= apache
 APP ?= magento
 
@@ -22,7 +22,7 @@ SHELL           ?= /bin/bash
 PROJECT_NORMALIZED ?= $(shell echo $(PROJECT) | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
 
 DOCKER		?= docker
-DOCKER_COMPOSE_FILE ?= ../ZendServer-$(ZS_VERSION)/php$(PHP_VERSION)/$(WEBSERVER)/docker-compose.yml
+DOCKER_COMPOSE_FILE ?= ../ZendServer-$(ZS_VERSION)/docker-compose.$(WEBSERVER).yml
 DOCKER_COMPOSE  ?= docker-compose -p $(PROJECT_NORMALIZED) -f $(DOCKER_COMPOSE_FILE)
 DOCKER_COMPOSE_SETUP_FILE ?= setup-$(APP).yml
 DOCKER_COMPOSE_SETUP  ?= docker-compose -p $(PROJECT_NORMALIZED) -f $(DOCKER_COMPOSE_SETUP_FILE) -f $(DOCKER_COMPOSE_FILE)
@@ -55,6 +55,7 @@ systeminfo: ##@App multiple system information
 # Noise targets: Generate event data and fetch monitoring events and statistics
 ###
 eventdata-init: ##@Noise populate (pregenerated) data to the Zend Server database; update timestamps to match -2h to now
+	$(DOCKER_COMPOSE_NOISE) build  $(EVENTDATA_CONTAINER)
 	$(DOCKER_COMPOSE_NOISE) run --rm $(EVENTDATA_CONTAINER) data_init.sh
 
 eventdata-update: ##@Noise update timestamps of event data in Zend Server to match -2h to now
@@ -78,18 +79,6 @@ zs-get-urlinsight: ##@Noise get average CPU usage for a time range from Zend Ser
 ###
 # General targets
 ###
-open-php:	##@General open PHP frontend in new Chrome browser tab
-	@$(eval FORMAT={{ .NetworkSettings.Networks.$(PROJECT_NORMALIZED)_default.IPAddress }})
-	@$(eval IP=$(shell docker inspect --format "$(FORMAT)" $(shell $(DOCKER_COMPOSE) ps -q $(ZS_CONTAINER) | sed -n 1p)))
-	@/opt/google/chrome/chrome http://$(IP) --newtab
-
-open-zs:	##@General open Zend Server UI in new Chrome browser tab
-	$(eval FORMAT={{ .NetworkSettings.Networks.$(PROJECT_NORMALIZED)_default.IPAddress }})
-	$(eval IP=$(shell docker inspect --format "$(FORMAT)" $(shell $(DOCKER_COMPOSE) ps -q $(ZS_CONTAINER) | sed -n 1p)))
-	@/opt/google/chrome/chrome http://$(IP):10081 --newtab
-
-open:	open-php open-zs	##@General open PHP and Zend Server frontend in new Chrome browser tab
-
 exec-zs:	##@General open PHP application shell in container
 	$(DOCKER) exec -ti $(shell $(DOCKER_COMPOSE) ps -q $(ZS_CONTAINER) | sed -n 1p) bash
 
@@ -109,6 +98,10 @@ docker-up: #@General start application
 	$(DOCKER_COMPOSE) up -d
 	$(DOCKER_COMPOSE) ps
 
+docker-down: #@General start application
+	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) ps
+
 docker-kill-all: #@General Caution: stops and removes all Docker containers
 	$(DOCKER) stop $(shell $(DOCKER) ps -a -q)
 	$(DOCKER) rm $(shell $(DOCKER) ps -a -q)
@@ -117,7 +110,7 @@ docker-kill-all: #@General Caution: stops and removes all Docker containers
 # Main targets
 ###
 
-build: submodule-update docker-build init	##@Main build docker images and initialization of PHP and JS app
+build: docker-build	##@Main build docker images and initialization
 
 up: docker-up docker-info	##@Main start containers with docker-compose and display some status info
 
