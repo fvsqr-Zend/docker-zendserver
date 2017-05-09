@@ -9,8 +9,8 @@ services:
     entrypoint: /bin/bash
     volumes_from:
       - zendserver:ro
+      - magento-zpk
     volumes:
-      - zpk-magento:/zpk
       - ./zs_env:/etc/zs_env
       - ./magento/deploy.sh:/usr/local/bin/deploy-magento.sh
       - ./magento/credentials:/etc/magento_credentials
@@ -25,9 +25,7 @@ services:
     build:
       context: https://github.com/janatzend/dockerfiles.git
       dockerfile: zpk/magento
-    volumes:
-      - zpk-magento:/zpk
-    command: ["mv", "/*.zpk", "/zpk"]
+    command: "ls -la /zpk"
 
 volumes:
     zpk-magento:
