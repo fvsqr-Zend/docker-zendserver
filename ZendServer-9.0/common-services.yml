@@ -15,7 +15,7 @@ services:
     environment:
       - CLUSTER=true
       - TCP_PORTS=80, 10081
-      - BALANCE=source
+      - BALANCE=roundrobin
       - EXCLUDE_PORTS=443,10082
     volumes:
       - /webapi
