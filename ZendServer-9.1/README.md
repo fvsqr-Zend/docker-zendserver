@@ -1,8 +1,11 @@
 Zend Server 9.1 in Docker
 ============================================
-Zend Server 9.1, PHP 7.1, Apache: [![](https://images.microbadger.com/badges/version/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own image badge on microbadger.com")
+Zend Server 9.1, PHP 7.1, Apache: 
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own image badge on microbadger.com")
 
-Zend Server 9.1, PHP 7.1, Nginx: [![](https://images.microbadger.com/badges/version/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own image badge on microbadger.com")
+Zend Server 9.1, PHP 7.1, Nginx:
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own image badge on microbadger.com")
+
 Run
 ---
 These images are automatically built at docker hub:
