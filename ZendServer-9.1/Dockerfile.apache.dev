@@ -8,23 +8,30 @@ MAINTAINER Jan Burkl <jan@zend.com>
 ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1437F7D2C623 && \
+  echo "deb http://repos.zend.com/zend-server/9.1/deb_apache2.4 server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  zend-server-php-7.1 \
   wget \
   curl \
   vim \
   telnet \
   net-tools \
   inetutils-ping \
-  && wget http://repos.zend.com/zend.key -O- |apt-key add - \
-  && /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.1 --automatic \
+  #&& wget http://repos.zend.com/zend.key -O- |apt-key add - \
+  #&& /ZendServer-RepositoryInstaller-linux/install_zs.sh 7.1 --automatic \
   && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /webapi && date +%s | sha256sum | base64 | head -c 64 | sed 's/.*/\L&/' > /webapi/secret
+
+ARG PRODUCTION=false
+
 RUN echo "Setting Docker API key and bootstrapping Zend Server" && \
 WEB_API_SECRET=$(cat /webapi/secret) && \
 /usr/local/zend/bin/zendctl.sh start && \
 /usr/local/zend/bin/zs-manage api-keys-add-key -n docker -s $WEB_API_SECRET && \
-/usr/local/zend/bin/zs-manage bootstrap-single-server -p admin -a 'TRUE' -r FALSE -t 3 -w 5 && \
+/usr/local/zend/bin/zs-manage bootstrap-single-server -p admin -a 'TRUE' --production $PRODUCTION -t 3 -w 5 && \
 /usr/local/zend/bin/zs-manage restart -N docker -K $WEB_API_SECRET && \
 /usr/local/zend/bin/zendctl.sh stop
 
