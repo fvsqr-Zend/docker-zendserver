@@ -31,6 +31,8 @@ remove_from_cluster()
   then
     echo "Standalone server, exiting now."
   else
+    echo "Disabling node to transfer session data..."
+    $ZS_MANAGE cluster-disable-server $SERVER_ID -N $WEB_API_KEY -K $WEB_API_SECRET -s
     echo "Removing node from cluster..."
     $ZS_MANAGE cluster-remove-server $SERVER_ID -N $WEB_API_KEY -K $WEB_API_SECRET -f
     echo "Node removed"
