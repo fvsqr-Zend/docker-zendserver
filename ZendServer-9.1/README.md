@@ -1,13 +1,26 @@
-Zend Server 9.1EA in Docker
+Zend Server 9.1 in Docker
 ============================================
+Zend Server 9.1, PHP 7.1, Apache: 
+
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:9.1-php7.1-apache.svg)](https://microbadger.com/images/janatzend/zend-server:9.1-php7.1-apache "Get your own image badge on microbadger.com")
+
+Zend Server 9.1, PHP 7.1, Nginx:
+
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/janatzend/zend-server.svg)](https://microbadger.com/images/janatzend/zend-server "Get your own image badge on microbadger.com")
+
+make
+----
+For your convenience a Makefile has been created. Make is used for simple pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-9.1``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
+
+
 Run
 ---
 These images are automatically built at docker hub:
 ```
-docker pull janatzend/zend-server:9.1EA-php7.1-apache
+docker pull janatzend/zend-server:9.1-php7.1-apache
 ```
 ```
-docker pull janatzend/zend-server:9.1EA-php7.1-nginx
+docker pull janatzend/zend-server:9.1-php7.1-nginx
 ```
 
 Build
@@ -16,21 +29,21 @@ Build your own bootstrapped Docker container for Zend Server with Apache and PHP
 
 To build run:
 ```
-docker build -t janatzend/zend-server:9.1EA-php7.1-apache .
+docker build -t janatzend/zend-server:9.1-php7.1-apache .
 ```
 or
 ```
-docker build -t janatzend/zend-server:9.1EA-php7.1-nginx -f Dockerfile.nginx .
+docker build -t janatzend/zend-server:9.1-php7.1-nginx -f Dockerfile.nginx .
 ```
 from within the cloned directory (please note the trailing dot).
 
 To run:
 ```
-docker run -d -P janatzend/zend-server:9.1EA-php7.1-apache
+docker run -d -P janatzend/zend-server:9.1-php7.1-apache
 ```
 resp.
 ```
-docker run -d -P janatzend/zend-server:9.1EA-php7.1-nginx
+docker run -d -P janatzend/zend-server:9.1-php7.1-nginx
 ```
 This starts the container in a daemonized mode, that means that the container is still available after closing the terminal window.
 
@@ -38,7 +51,7 @@ Docker exposes port 80 and 443 for http(s) and port 10081 and 10082 for Zend Ser
 
 You can also map manually (mandatory for Mac OS X), for example
 ```
-docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:9.1EA-php7.1-apache
+docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:9.1-php7.1-apache
 ```
 This command redirects port 80 to port 88, and port 10081 (Zend Server UI port) to port 10088. The default web site is then available at ```http://localhost:88```, Zend Server GUI at ```http://localhost:10088```
 
@@ -46,11 +59,11 @@ Internal / Development mode
 ---------------------------
 Only applicable on Linux: If there's no need to expose ports at all, because all you need is an internal dev system which is only available on your personal host, you can also start a container like this:
 ```
-docker run -d janatzend/zend-server:9.1EA-php7.1-apache
+docker run -d janatzend/zend-server:9.1-php7.1-apache
 ```
 or
 ```
-docker run janatzend/zend-server:9.1EA-php7.1-apache
+docker run janatzend/zend-server:9.1-php7.1-apache
 ```
 You can access the App and Zend Server UI via the default ports 80, 443, 10081, 10082, but now you have to use the IP address of the container. You can find it in the result of
 ```
@@ -94,7 +107,3 @@ docker-compose scale zendserver=3
 ```
 The load balancer will automatically reconfigure, so that the website with all started application servers is reachable at `http://localhost:80`.
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...
-
-make
-----
-For your convenience a Makefile has been created. Make is used for simple pulling, building, starting, stopping and removing Docker images resp. containers. In a terminal type ```make```to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
