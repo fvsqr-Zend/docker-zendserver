@@ -3,7 +3,7 @@
 #
 
 FROM ubuntu:16.04
-MAINTAINER Jan Burkl <jan@zend.com>
+LABEL maintainer="jan.burkl@roguewave.com"
 
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1437F7D2C623 && \
   echo "deb http://repos.zend.com/zend-server/9.1/deb_apache2.4 server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
