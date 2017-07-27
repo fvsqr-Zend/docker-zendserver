@@ -6,7 +6,7 @@ Build your own bootstrapped Docker container for Zend Server.
 Please browse to the directory for getting the preferred container setup and follow the instructions in the appropriate README.
 E.g.:
 ```
-cd ZendServer-9.0/php7.0/apache
+cd ZendServer-9.1
 less README.md
 ```
 
