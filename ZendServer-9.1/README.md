@@ -10,7 +10,8 @@ Zend Server 9.1, PHP 7.1, Nginx:
 
 make
 ----
-For your convenience a Makefile has been created. Make is used for simple pulling, building, starting, stopping and removing Docker images resp. containers. In a terminal type ```make```to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
+For your convenience a Makefile has been created. Make is used for simple pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-9.1``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
+
 
 Run
 ---
