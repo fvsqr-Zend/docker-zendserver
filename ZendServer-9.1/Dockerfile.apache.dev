@@ -32,11 +32,11 @@ RUN echo "Setting Docker API key and bootstrapping Zend Server" && \
   echo export APACHE_ULIMIT_MAX_FILES=\"ulimit -n 4096\" >> /etc/zce.rc && \
   rm -f /usr/local/zend/var/log/*.log
 
-COPY run.sh /run.sh
+COPY ./etc/run.sh /run.sh
 RUN chmod 775 /*.sh
 
-COPY shell_functions.rc /shell_functions.rc
-COPY check_lic.php /check_lic.php
+COPY ./etc/shell_functions.rc /shell_functions.rc
+COPY ./etc/check_lic.php /check_lic.php
 
 EXPOSE 80
 EXPOSE 443
