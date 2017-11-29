@@ -1,0 +1,32 @@
+version: "2"
+
+services:
+
+  lb:
+    extends:
+      file: common-services.yml
+      service: lb
+    links:
+      - zendserver
+    environment:
+      - BALANCE=roundrobin
+
+  lb-ui:
+    extends:
+      file: common-services.yml
+      service: lb-ui
+    links:
+      - zendserver
+
+  zendserver:
+    extends:
+      file: common-services.yml
+      service: zendserver
+    image: janatzend/zend-server:2018.1ea-php7.2-nginx
+    links:
+      - 'mysql:DB'
+
+  mysql:
+    extends:
+      file: common-services.yml
+      service: mysql

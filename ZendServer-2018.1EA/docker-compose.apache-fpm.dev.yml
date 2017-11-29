@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+
+  lb:
+    extends:
+      file: common-services.yml
+      service: lb
+    links:
+      - zendserver
+
+  lb-ui:
+    extends:
+      file: common-services.yml
+      service: lb-ui
+    links:
+      - zendserver
+
+  zendserver:
+    extends:
+      file: common-services.yml
+      service: zendserver
+    build:
+      context: .
+      dockerfile: Dockerfile.apache-fpm.dev
+    image: zendserver:2018.1ea-apache-fpm
+    links:
+      - 'mysql:DB'
+    environment:
+      - APACHE_ULIMIT_MAX_FILES="ulimit -n 4096"
+
+  mysql:
+    extends:
+      file: common-services.yml
+      service: mysql
