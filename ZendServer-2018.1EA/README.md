@@ -119,3 +119,14 @@ docker-compose scale zendserver=3
 ```
 The load balancer will automatically reconfigure, so that the website with all started application servers is reachable at `http://localhost:80`.
 Another note: One Zend Server instance a.k.a. Zend Server Container is consuming round about 500M of memory, so please chose the number of nodes to be started wisely...
+
+Database
+--------
+When using either the docker-compose files or make to start a Zend Server environment, a MySQL database is automatically started in a dedicated container. This database server is used for Zend Server to store monitoring information, configuration data and in general cluster data - even if only one Zend Server node is being used.
+However, this database can also be used as the application database. For example, the Zend Server deployment feature allows you to install test applications from within the Zend Server UI, e.g. Drupal, Wordpress, Magento and more. Most of these applications need a database to work. The database credentials have to be entered during the deployment process. By default these are:
+```
+DB host: DB
+DB port: 3306
+DB user: root
+DB pass: admin
+```   
