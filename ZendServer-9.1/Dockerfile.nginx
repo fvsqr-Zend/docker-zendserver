@@ -10,6 +10,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
   zend-server-nginx-php-7.1 \
+  inetutils-ping \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /usr/local/zend/var/libraries/*.bak
 

@@ -12,7 +12,7 @@ ADD ZendServer-RepositoryInstaller-linux /ZendServer-RepositoryInstaller-linux
 
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/*.sh
 RUN chmod 775 /ZendServer-RepositoryInstaller-linux/nginx/*.sh
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y wget && wget http://repos.zend.com/zend.key -O- |apt-key add - \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y wget inetutils-ping && wget http://repos.zend.com/zend.key -O- |apt-key add - \
   && /ZendServer-RepositoryInstaller-linux/install_zs.sh ${PHP_VERSION} ${ZS_INSTALL_ARGS} \
   && rm -rf /var/lib/apt/lists/*
 
