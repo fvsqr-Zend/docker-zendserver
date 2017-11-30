@@ -82,6 +82,17 @@ You can access the App and Zend Server UI via the default ports 80, 443, 10081, 
 docker inspect <container-id>
 ```
 
+### Loading PHP app from Host system
+If there is already a PHP app available locally on the host system, it can be easily added to the container. E.g.
+```
+docker run -d \
+  -v $PWD/www:/var/www/html \
+  -p 88:80 \
+  -p 10088:10081 \
+  janatzend/zend-server:2018.1ea-php7.2-nginx
+```
+mounts the ```www``` folder from the current working directory into the pre-defined document root from Apache or Nginx. The app can then be accessed by calling ```http://localhost:88```.
+
 Open Zend Server GUI
 -----
 If you're using "-P" flag, you can check the App and Zend Server ports with
