@@ -14,7 +14,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /usr/local/zend/var/libraries/*.bak
 
-ARG PRODUCTION=false
+ARG PRODUCTION=TRUE
 
 RUN echo "Bootstrapping Zend Server" && \
   /usr/local/zend/bin/zendctl.sh start && \
