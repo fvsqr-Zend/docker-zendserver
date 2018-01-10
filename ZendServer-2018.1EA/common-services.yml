@@ -24,7 +24,7 @@ services:
   zendserver:
     environment:
       - CLUSTER=true
-      - TCP_PORTS=${APP_PORT}, ${ZENDSERVER_UI_PORT}
+      - TCP_PORTS=80, 10081
       - EXCLUDE_PORTS=443,10082
     volumes:
       - /webapi
@@ -34,5 +34,5 @@ services:
     ports:
       - ${MYSQL_PORT}
     environment:
-      - MYSQL_ROOT_PASSWORD=${ZENDSERVER_MYSQL_DATABASE}
-      - MYSQL_DATABASE=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${ZENDSERVER_MYSQL_DATABASE}
