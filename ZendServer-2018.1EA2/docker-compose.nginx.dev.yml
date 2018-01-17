@@ -8,6 +8,8 @@ services:
       service: lb
     links:
       - zendserver
+    environment:
+      - BALANCE=roundrobin
 
   lb-ui:
     extends:
@@ -20,9 +22,10 @@ services:
     extends:
       file: common-services.yml
       service: zendserver
-    image: janatzend/zend-server:2018.1ea-php7.2-apache-fpm
-    environment:
-      - APACHE_ULIMIT_MAX_FILES="ulimit -n 4096"
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx.dev
+    image: zendserver:-nginx
     links:
       - 'mysql:DB'
 

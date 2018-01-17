@@ -1,15 +1,15 @@
 #
-# Zend Server 9.1
+# Zend Server 2018.1 EA
 #
 
 FROM ubuntu:16.04
 LABEL maintainer="jan.burkl@roguewave.com"
 
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1437F7D2C623 && \
-  echo "deb http://repos.zend.com/zend-server/early-access/2018.1/lin/deb_apache2.4/ server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
+  echo "deb http://repos.zend.com/zend-server/early-access/2018.1.EA2/lin/deb_apache2.4/ server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  zend-server-nginx-php-7.2 zend-server-php-7.2-common \
+  zend-server-apache-fpm-php-7.2 zend-server-php-7.2-common \
   wget \
   curl \
   vim \
@@ -32,7 +32,7 @@ RUN echo "Bootstrapping Zend Server" && \
   echo export APACHE_ULIMIT_MAX_FILES=\"ulimit -n 4096\" >> /etc/zce.rc && \
   rm -f /usr/local/zend/var/log/*.log
 
-COPY ./etc/run-nginx.sh /run.sh
+COPY ./etc/run.sh /run.sh
 RUN chmod 775 /*.sh
 
 COPY ./etc/shell_functions.rc /shell_functions.rc

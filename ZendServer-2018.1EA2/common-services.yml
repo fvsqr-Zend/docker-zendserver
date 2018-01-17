@@ -7,8 +7,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 80:80
-      - 1936:1936
+      - ${APP_PORT}:80
+      - ${HAPROXY_STATS_PORT}:1936
     environment:
       - BALANCE=roundrobin
 
@@ -17,8 +17,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 10081:10081
-      - 1937:1936
+      - ${ZENDSERVER_UI_PORT}:10081
     environment:
       - BALANCE=source
 
@@ -33,7 +32,7 @@ services:
   mysql:
     image: 'mysql:5.6'
     ports:
-      - '3306'
+      - ${MYSQL_PORT}
     environment:
-      MYSQL_ROOT_PASSWORD: 'admin'
-      MYSQL_DATABASE: 'ZendServer'
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${ZENDSERVER_MYSQL_DATABASE}

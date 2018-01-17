@@ -6,10 +6,10 @@ FROM ubuntu:16.04
 LABEL maintainer="jan.burkl@roguewave.com"
 
 RUN apt-key adv --keyserver pgp.mit.edu --recv-key 799058698E65316A2E7A4FF42EAE1437F7D2C623 && \
-  echo "deb http://repos.zend.com/zend-server/early-access/2018.1/lin/deb_apache2.4/ server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
+  echo "deb http://repos.zend.com/zend-server/early-access/2018.1.EA2/lin/deb_apache2.4/ server non-free" >> /etc/apt/sources.list.d/zend-server.list && \
   apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
-  zend-server-apache-fpm-php-7.2 zend-server-php-7.2-common \
+  zend-server-php-7.2 zend-server-php-7.2-common \
   wget \
   curl \
   vim \
