@@ -14,7 +14,7 @@ Zend Server , PHP 7.2, Nginx:
 
 make
 ----
-For your convenience a Makefile is available. Make is used for pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-:2018.1EA2``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
+For your convenience a Makefile is available. Make is used for pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-2018.1EA2``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
 
 ### Ports
 All ```make``` commands are using docker-compose. In order to define the ports of the app, Zend Server UI and some more, the ```.env``` file can be modified. This environment file is being used in the ```docker-compose.*.yml``` files.
