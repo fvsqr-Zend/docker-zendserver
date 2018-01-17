@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.apache.dev
-    image: zend-server:2018.1.ea2
+    image: zend-server:2018.1ea2
     links:
       - 'mysql:DB'
     environment:

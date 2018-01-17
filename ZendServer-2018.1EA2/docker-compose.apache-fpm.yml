@@ -20,7 +20,7 @@ services:
     extends:
       file: common-services.yml
       service: zendserver
-    image: janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm
+    image: janatzend/zend-server:2018.1ea2-php7.2-apache-fpm
     environment:
       - APACHE_ULIMIT_MAX_FILES="ulimit -n 4096"
     links:
