@@ -2,19 +2,19 @@ Zend Server  in Docker
 ============================================
 Zend Server , PHP 7.2, Apache:
 
-[![](https://images.microbadger.com/badges/version/janatzend/zend-server:-php7.2-apache.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-apache "Zend Server , PHP 7.2, Apache") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:-php7.2-apache.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-apache "Zend Server , PHP 7.2, Apache")
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server:2018.1.ea2-php7.2-apache.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-apache "Zend Server 2018.1 EA2, PHP 7.2, Apache") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:2018.1.ea2-php7.2-apache.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-apache "Zend Server 2018.1 EA2, PHP 7.2, Apache")
 
 Zend Server , PHP 7.2, Apache-FPM:
 
-[![](https://images.microbadger.com/badges/version/janatzend/zend-server:-php7.2-apache-fpm.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-apache-fpm "Zend Server , PHP 7.2, Apache-FPM") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:-php7.2-apache-fpm.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-apache-fpm "Zend Server , PHP 7.2, Apache-FPM")
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm "Zend Server 2018.1 EA2, PHP 7.2, Apache-FPM") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm "Zend Server 2018.1 EA2, PHP 7.2, Apache-FPM")
 
 Zend Server , PHP 7.2, Nginx:
 
-[![](https://images.microbadger.com/badges/version/janatzend/zend-server:-php7.2-nginx.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-nginx "Zend Server , PHP 7.2, Nginx") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:-php7.2-nginx.svg)](https://microbadger.com/images/janatzend/zend-server:-php7.2-nginx "Zend Server , PHP 7.2, Nginx")
+[![](https://images.microbadger.com/badges/version/janatzend/zend-server:2018.1.ea2-php7.2-nginx.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-nginx "Zend Server 2018.1 EA2, PHP 7.2, Nginx") [![](https://images.microbadger.com/badges/image/janatzend/zend-server:2018.1.ea2-php7.2-nginx.svg)](https://microbadger.com/images/janatzend/zend-server:2018.1.ea2-php7.2-nginx "Zend Server 2018.1 EA2, PHP 7.2, Nginx")
 
 make
 ----
-For your convenience a Makefile is available. Make is used for pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
+For your convenience a Makefile is available. Make is used for pulling, building, starting, stopping and removing Docker images resp. containers. Clone the repository ```https://github.com/janatzend/docker-zendserver.git``` and run ```make``` in the ```./ZendServer-:2018.1EA2``` directory to get all available options. Please note, that this has not been tested on Windows but only on MacOS and Linux.
 
 ### Ports
 All ```make``` commands are using docker-compose. In order to define the ports of the app, Zend Server UI and some more, the ```.env``` file can be modified. This environment file is being used in the ```docker-compose.*.yml``` files.
@@ -23,10 +23,10 @@ Run
 ---
 These images are automatically built at docker hub:
 ```
-docker pull janatzend/zend-server:-php7.2-apache
+docker pull janatzend/zend-server:2018.1.ea2-php7.2-apache
 ```
 ```
-docker pull janatzend/zend-server:-php7.2-nginx
+docker pull janatzend/zend-server:2018.1.ea2-php7.2-nginx
 ```
 
 Build
@@ -35,29 +35,29 @@ Build your own bootstrapped Docker container for Zend Server with Apache, Apache
 
 To build run:
 ```
-docker build -t janatzend/zend-server:-php7.2-apache .
+docker build -t janatzend/zend-server:2018.1.ea2-php7.2-apache .
 ```
 or
 ```
-docker build -t janatzend/zend-server:-php7.2-apache-fpm -f Dockerfile.apache-fpm .
+docker build -t janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm -f Dockerfile.apache-fpm .
 ```
 or
 ```
-docker build -t janatzend/zend-server:-php7.2-nginx -f Dockerfile.nginx .
+docker build -t janatzend/zend-server:2018.1.ea2-php7.2-nginx -f Dockerfile.nginx .
 ```
 from within the cloned directory (please note the trailing dot).
 
 To run:
 ```
-docker run -d -P janatzend/zend-server:-php7.2-apache
+docker run -d -P janatzend/zend-server:2018.1.ea2-php7.2-apache
 ```
 resp.
 ```
-docker run -d -P janatzend/zend-server:-php7.2-apache-fpm
+docker run -d -P janatzend/zend-server:2018.1.ea2-php7.2-apache-fpm
 ```
 resp.
 ```
-docker run -d -P janatzend/zend-server:-php7.2-nginx
+docker run -d -P janatzend/zend-server:2018.1.ea2-php7.2-nginx
 ```
 This starts the container in a daemonized mode, that means that the container is still available after closing the terminal window.
 
@@ -65,7 +65,7 @@ Docker exposes port 80 and 443 for http(s) and port 10081 and 10082 for Zend Ser
 
 You can also map manually (mandatory for Mac OS X), for example
 ```
-docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:-php7.2-apache
+docker run -d -p 88:80 -p 10088:10081 janatzend/zend-server:2018.1.ea2-php7.2-apache
 ```
 This command maps port 88 on localhost to port 80 in the container, and port 10088 on localhost to port 10081 in the container (Zend Server UI port). The default web site is then available at ```http://localhost:88```, Zend Server GUI at ```http://localhost:10088```
 
@@ -73,11 +73,11 @@ Internal / Development mode
 ---------------------------
 Only applicable on Linux: If there's no need to expose ports at all, because all you need is an internal dev system which is only available on your personal host, you can also start a container like this:
 ```
-docker run -d janatzend/zend-server:-php7.2-apache
+docker run -d janatzend/zend-server:2018.1.ea2-php7.2-apache
 ```
 or
 ```
-docker run janatzend/zend-server:-php7.2-apache
+docker run janatzend/zend-server:2018.1.ea2-php7.2-apache
 ```
 You can access the App and Zend Server UI via the default ports 80, 443, 10081, 10082, but now you have to use the IP address of the container. You can find it in the result of
 ```
@@ -91,7 +91,7 @@ docker run -d \
   -v $PWD/www:/var/www/html \
   -p 88:80 \
   -p 10088:10081 \
-  janatzend/zend-server:-php7.2-nginx
+  janatzend/zend-server:2018.1.ea2-php7.2-nginx
 ```
 mounts the ```www``` folder from the current working directory into the pre-defined document root from Apache or Nginx. The app can then be accessed by calling ```http://localhost:88```.
 
