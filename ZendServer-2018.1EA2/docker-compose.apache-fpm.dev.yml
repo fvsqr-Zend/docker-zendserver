@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.apache-fpm.dev
-    image: zendserver:2018.1ea-apache-fpm
+    image: zendserver:-apache-fpm
     links:
       - 'mysql:DB'
     environment:

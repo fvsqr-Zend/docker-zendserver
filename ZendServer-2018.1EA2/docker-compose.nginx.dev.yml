@@ -25,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.nginx.dev
-    image: zendserver:2018.1ea-nginx
+    image: zendserver:-nginx
     links:
       - 'mysql:DB'
 
