@@ -1,6 +1,7 @@
 #!make
 
-DOCKER ?= docker
+DOCKER_HOST ?= unix:///var/run/docker.sock
+DOCKER ?= docker -H=${DOCKER_HOST}
 
 default: help
 
@@ -132,7 +133,7 @@ zs-nginx-dev-scale-to-5: zs-nginx-dev-def prep scale-to-5 ##@Nginx-dev scale to 
 #-------------------------------------------------------------------------------
 prep:
 	@$(eval PROJECT_NAME_SANITIZED = $(shell echo $(PROJECT_NAME) | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]'))
-	@$(eval DOCKER_COMPOSE = docker-compose -p ${PROJECT_NAME_SANITIZED} -f ${DOCKER_COMPOSE_FILE})
+	@$(eval DOCKER_COMPOSE = docker-compose -H=${DOCKER_HOST} -p ${PROJECT_NAME_SANITIZED} -f ${DOCKER_COMPOSE_FILE})
 
 info:
 	@$(eval FORMAT={{ .Name }} {{.Config.Hostname }} {{ .NetworkSettings.Networks.${PROJECT_NAME_SANITIZED}_default.IPAddress }})
