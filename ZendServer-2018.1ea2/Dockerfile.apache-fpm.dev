@@ -2,7 +2,7 @@
 # Zend Server 2018.1 EA
 #
 
-FROM ubuntu:16.04
+FROM ubuntu:14.04
 LABEL maintainer="jan.burkl@roguewave.com"
 
 ADD ./etc/zend.key /etc/zend.key

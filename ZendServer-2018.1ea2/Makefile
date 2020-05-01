@@ -182,7 +182,7 @@ start:
 single-start:
 	@echo "\nStarting ${PROJECT_NAME} (Single server)"
 	@echo "-----------------------------------------------------------------------------\n"
-	${DOCKER_COMPOSE} run -d -e CLUSTER= -p 10081:10081 zendserver
+	${DOCKER_COMPOSE} run -d -e CLUSTER= -p 8089:80 -p 443:443 -p 10081:10081 zendserver
 	@echo "\nDone.\n"
 
 stop:
